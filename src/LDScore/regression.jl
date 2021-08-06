@@ -1,4 +1,25 @@
+using Statistics
+
 abstract type LD_Score_Regression end
+
+function aggregate(
+    ld_score_regression,
+    y, x_tot, N, M_tot, intercept,
+)
+    if intercept == nothing intecept = ld_score_regression.__null_intercept__ end
+end
+
+function _update_weights(
+    ld_score_regression,
+    x_tot, w, N, M_tot, tot_agg, intercept,
+)
+end
+
+
+
+
+
+
 
 mutable struct Hsq <: LD_Score_Regression
     y
@@ -26,11 +47,8 @@ mutable struct Hsq <: LD_Score_Regression
 end
 
 
-
-
-
 function make_ld_score_regression(
-    ld_score_regression::LD_Score_Regression,
+    ld_score_regression::Hsq,
     y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
 )
     #= TODO
@@ -57,13 +75,11 @@ function make_ld_score_regression(
     x_tot = sum(x, dims = 2)'
     constrain_intercept = intercept != nothing
 
-    print(add(ld_score_regression, 10))
+    tot_agg = aggregate(ld_score_regression, y, x_tot, N, M_tot, intercept)
+    initial_w = _update_weights(
+        ld_score_regression,
+        x_tot, w, N, M_tot, tot_agg, intercept,
+    )
+    Nbar = mean(N)
 
-    ld_score_regression
-end
-
-function aggregate(
-    ld_score_regression::LD_Score_Regression, y, x_tot, N, M_tot, intercept,
-)
-    if intercept == nothing intecept = ld_score_regression.__null_intercept__ end
 end

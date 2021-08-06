@@ -18,11 +18,12 @@ intercept = nothing
 slow = false
 step1_ii = [[true] [true] [true] [true] [true] [true]]
 old_weights = false
-synthetic_hsq = Hsq(
+
+synthetic_hsq = LDScoreJulia.Hsq(
     y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
 )
 
-@test typeof(synthetic_hsq) == Hsq
+@test typeof(synthetic_hsq) == LDScoreJulia.Hsq
 @test synthetic_hsq.__null_intercept__ == 1
 @test synthetic_hsq.y == [[0.2061] [0.2601] [4.3514] [6.1703] [5.0221] [2.418 ]]'
 @test synthetic_hsq.x == [[6.1388] [6.4785] [8.88] [4.8064] [3.6219] [3.7244]]'
@@ -34,3 +35,8 @@ synthetic_hsq = Hsq(
 @test synthetic_hsq.slow == false
 @test synthetic_hsq.step1_ii == [[true] [true] [true] [true] [true] [true]]
 @test synthetic_hsq.old_weights == false
+
+LDScoreJulia.make_ld_score_regression(
+    synthetic_hsq,
+    y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
+)
