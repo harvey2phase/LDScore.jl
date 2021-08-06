@@ -11,15 +11,16 @@ mutable struct Hsq <: LD_Score_Regression
     slow
     step1_ii
     old_weights
+    __null_intercept__
 
     constrain_intercept
     n_annot
-    __null_intercept__
     function Hsq(
         y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
     )
-        hsq = new(y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights)
-        hsq.__null_intercept__ = 1
+        hsq = new(
+            y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights, 1,
+        )
         return hsq
     end
 end
