@@ -29,7 +29,7 @@ end
 
 
 function make_ld_score_regression(
-    ld_score_regression::Hsq,
+    ld_score_regression::LD_Score_Regression,
     y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
 )
     #= TODO
