@@ -1,17 +1,10 @@
-abstract type LD_Score_Regression end
+include("LD_Score_Regression.jl")
 
 function aggregate(
     reg::LD_Score_Regression,
     y, x_tot, N, M_tot, intercept,
 )
     if intercept == nothing intecept = reg.__null_intercept__ end
-end
-
-function _update_weights(
-    reg::LD_Score_Regression,
-    x_tot, w, N, M_tot, tot_agg, intercept,
-)
-    if intercept == nothing intercept = reg.__null_intercept__ end
 end
 
 function make_ld_score_regression(
@@ -40,13 +33,12 @@ function make_ld_score_regression(
     # shape should be [n_snp, 1]
     x_tot = sum(x, dims = 2)'
     reg.constrain_intercept = intercept != nothing
-    print("WOW")
-    print(reg.constrain_intercept)
+    reg.intercept = intercept
+    reg.n_blocks = n_blocks
 
     tot_agg = aggregate(reg, y, x_tot, N, M_tot, intercept)
     initial_w = _update_weights(
-        reg,
-        x_tot, w, N, M_tot, tot_agg, intercept,
+        reg, x_tot, w, N, M_tot, tot_agg, intercept,
     )
     Nbar = mean(N)
     x = N .* x / Nbar
