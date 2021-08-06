@@ -13,7 +13,7 @@ M = [[1173569.]]
 n_blocks = 200
 intercept = nothing
 slow = false
-step1_ii = [[true] [true] [true] [true] [true] [true]]
+step1_ii = [[true] [true] [true] [true] [true] [true]]'
 old_weights = false
 
 synthetic_hsq = LDScoreJulia.Hsq(
@@ -32,6 +32,8 @@ synthetic_hsq = LDScoreJulia.Hsq(
 @test synthetic_hsq.slow == false
 @test synthetic_hsq.step1_ii == [[true] [true] [true] [true] [true] [true]]
 =#
+
+println("==================== NEW ===========================")
 
 synthetic_hsq.old_weights == false
 LDScoreJulia.make_ld_score_regression(

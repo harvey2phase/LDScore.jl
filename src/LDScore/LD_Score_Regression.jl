@@ -5,6 +5,7 @@ function _delete_vals_tot(
     )
 end
 
+#=
 function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M):
     # Get delete values for total h2 or gencov
     n_annot = reg.n_annot
@@ -99,6 +100,7 @@ function _combine_twostep_jknives(reg::LD_Score_Regression, step1_jknife, step2_
                         ['est', 'jknife_se', 'jknife_est', 'jknife_var', 'jknife_cov', 'delete_values'])
     return jknife(est, jknife_se, jknife_est, jknife_var, jknife_cov, delete_values)
 end
+=#
 
 function _update_weights(
     reg::LD_Score_Regression,
