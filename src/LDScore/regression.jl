@@ -14,10 +14,7 @@ end
 # TODO probably move functions with reg::Hsq to Hsq.jl
 
 # TODO add a test (works though)
-function weights(
-    reg::Hsq,
-    ld, w_ld, N, M, hsq, intercept,
-)
+function hsq_weights(ld, w_ld, N, M, hsq, intercept)
     if intercept == nothing intercept = 1 end
     hsq = max(maximum(hsq), 0.0)
     hsq = min(hsq, 1.0)
@@ -28,8 +25,6 @@ function weights(
     het_w = 1.0 ./ (2 .* (c .* ld .+ intercept).^2)
     oc_w = 1.0 ./ w_ld
     w = het_w .* oc_w
-    println("w")
-    println(w)
     return w
 end
 
@@ -39,7 +34,7 @@ function _update_weights(
 )
     if intercept == nothing intercept = reg.__null_intercept__ end
 
-    return weights(reg, ld, w_ld, N, M, hsq, intercept)
+    return hsq_weights(ld, w_ld, N, M, hsq, intercept)
 end
 
 function aggregate(

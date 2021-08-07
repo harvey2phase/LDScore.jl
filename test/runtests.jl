@@ -41,3 +41,7 @@ LDScoreJulia.make_ld_score_regression(
 @test synthetic_hsq.slow == false
 @test synthetic_hsq.step1_ii == [[true] [true] [true] [true] [true] [true]]
 =#
+
+@testset "Hsq weights" begin
+
+end
