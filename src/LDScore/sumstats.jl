@@ -1,3 +1,6 @@
+include("../Parse/Parse.jl")
+using Main.Parse
+
 function get_compression(fh)
     if endswith(fh, "gz") return "gzip"
     elseif endswith(fh, "bz2") return "bz2"
