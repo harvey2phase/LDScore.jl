@@ -1,9 +1,30 @@
+"""
+To use this abstract type and avaliable functions,
+create a subtype and implement the necessary functions.
+
+Example:
+    mutable struct Regression <: LD_Score_Regression
+        ...
+
+        function Regression(...)
+            new(...)
+        end
+    end
+
+    function update_weights(reg::Regression, ...)
+    end
+
+See `Hsq.jl` for a case study example.
+"""
+
 abstract type LD_Score_Regression end
+
 
 function _delete_vals_tot(
     reg::LD_Score_Regression,
     )
 end
+
 
 function aggregate(
     reg::LD_Score_Regression,
@@ -19,6 +40,7 @@ function aggregate(
     denom = mean(x .* N)
     return num / denom
 end
+
 
 function ld_score_regression(
     reg::LD_Score_Regression,
@@ -50,7 +72,7 @@ function ld_score_regression(
     reg.n_blocks = n_blocks
 
     tot_agg = aggregate(reg, y, x_tot, N, M_tot, intercept)
-    initial_w = _update_weights(
+    initial_w = update_weights(
         reg, x_tot, w, N, M_tot, tot_agg, intercept,
     )
     Nbar = mean(N)
@@ -102,6 +124,8 @@ function ld_score_regression(
         =#
     end
 end
+
+
 
 #=
 function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M):

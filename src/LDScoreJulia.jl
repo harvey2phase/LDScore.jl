@@ -1,5 +1,5 @@
 module LDScoreJulia
-
-    # Write your package code here.
     include("LDScore/regression.jl")
+
+    export hsq_weights
 end

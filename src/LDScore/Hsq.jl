@@ -1,3 +1,9 @@
+function test_print(name, var)
+    println(name)
+    println(var)
+end
+
+
 mutable struct Hsq <: LD_Score_Regression
     y
     x
@@ -15,6 +21,15 @@ mutable struct Hsq <: LD_Score_Regression
     n_annot
     intercept_se
     twostep_filtered
+
+    """
+    Use these default values:
+        - n_blocks = 200
+        - intercept = nothing
+        - slow = false
+        - twostep = nothing
+        - old_weights = false
+    """
     function Hsq(
         y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
     )
@@ -25,9 +40,13 @@ mutable struct Hsq <: LD_Score_Regression
     end
 end
 
+
+
 # TODO add a test (works though)
 function hsq_weights(ld, w_ld, N, M, hsq, intercept)
-    if intercept == nothing intercept = 1 end
+    if intercept == nothing intercept = 1.0 end
+    M = M[1][1]
+    test_print("M", M)
     hsq = max(maximum(hsq), 0.0)
     hsq = min(hsq, 1.0)
     ld = fmax(ld, 1.0)
@@ -40,7 +59,9 @@ function hsq_weights(ld, w_ld, N, M, hsq, intercept)
     return w
 end
 
-function _update_weights(
+
+
+function update_weights(
     reg::Hsq,
     ld, w_ld, N, M, hsq, intercept,
 )
