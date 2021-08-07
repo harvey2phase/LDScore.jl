@@ -26,10 +26,10 @@ function _delete_vals_tot(
 end
 
 
-function aggregate(
-    reg::LD_Score_Regression,
-    y, x, N, M, intercept,
-)
+"""
+Set default intecept = nothing
+"""
+function aggregate(reg::LD_Score_Regression, y, x, N, M, intercept)
     if intercept == nothing
         intercept = reg.__null_intercept__
     end
