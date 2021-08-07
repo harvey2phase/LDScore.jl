@@ -101,10 +101,3 @@ function _combine_twostep_jknives(reg::LD_Score_Regression, step1_jknife, step2_
     return jknife(est, jknife_se, jknife_est, jknife_var, jknife_cov, delete_values)
 end
 =#
-
-function _update_weights(
-    reg::LD_Score_Regression,
-    x_tot, w, N, M_tot, tot_agg, intercept,
-)
-    if intercept == nothing intercept = reg.__null_intercept__ end
-end
