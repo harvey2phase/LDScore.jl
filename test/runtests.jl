@@ -1,3 +1,5 @@
+include("../src/LDScoreJulia.jl")
+
 using Main
 using Main.LDScoreJulia
 using Test
