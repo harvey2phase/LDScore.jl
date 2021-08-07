@@ -40,9 +40,7 @@ mutable struct Hsq <: LD_Score_Regression
 end
 
 
-
-# TODO add a test (works though)
-function hsq_weights(ld, w_ld, N, M, hsq, intercept)
+function hsq_weights(ld, w_ld, N, M, hsq; intercept=nothing)
     if intercept == nothing intercept = 1.0 end
     M = M[1][1]
     hsq = max(maximum(hsq), 0.0)
@@ -58,12 +56,11 @@ function hsq_weights(ld, w_ld, N, M, hsq, intercept)
 end
 
 
-
 function update_weights(
     reg::Hsq,
     ld, w_ld, N, M, hsq, intercept,
 )
     if intercept == nothing intercept = reg.__null_intercept__ end
 
-    return hsq_weights(ld, w_ld, N, M, hsq, intercept)
+    return hsq_weights(ld, w_ld, N, M, hsq; intercept=intercept)
 end

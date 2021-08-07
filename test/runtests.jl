@@ -70,17 +70,15 @@ end
     )
 
     @testset "weights" begin
-        intercept = nothing
-
         x = [[0.09570313] [0.09570313] [0.09570313] [0.09570313]]'
-        a = hsq_weights(ld, w_ld, N, M, 1, intercept)
-        b = hsq_weights(ld, w_ld, N, M, 2, intercept)
+        a = hsq_weights(ld, w_ld, N, M, 1)
+        b = hsq_weights(ld, w_ld, N, M, 2)
         @test vector_approx(a, x, eps)
         @test vector_approx(a, b, eps)
 
         x = [[0.5] [0.5] [0.5] [0.5]]'
-        a = hsq_weights(ld, w_ld, N, M, 0, intercept)
-        b = hsq_weights(ld, w_ld, N, M, -1, intercept)
+        a = hsq_weights(ld, w_ld, N, M, 0)
+        b = hsq_weights(ld, w_ld, N, M, -1)
         @test vector_approx(a, x, eps)
         @test vector_approx(a, b, eps)
     end
