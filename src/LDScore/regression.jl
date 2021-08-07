@@ -118,7 +118,7 @@ function make_ld_score_regression(
         x1 = zeros(0)
         for (i, j) in enumerate(s)
             if s[i] == 1
-                append!(x1, x1[i])
+                append!(x1, x[i])
             end
         end
         #=
