@@ -40,22 +40,23 @@ function _read_sumstats(args, fh; alleles=false, dropna=false)
     return sumstats
 end
 
-function _read_ref_ld(args, log)
+function _read_ref_ld(args)
     # Read reference LD Scores
-    ref_ld = _read_chr_split_files(args.ref_ld_chr, args.ref_ld, log,
-                                   'reference panel LD Score', ps.ldscore_fromlist)
+    ref_ld = _read_chr_split_files(args.ref_ld_chr, args.ref_ld,
+                                   "reference panel LD Score", ps.ldscore_fromlist)
     log.log(
-        'Read reference panel LD Scores for {N} SNPs.'.format(N=len(ref_ld)))
+        "Read reference panel LD Scores for {N} SNPs.".format(N=len(ref_ld)))
     return ref_ld
 end
 
-function _read_M(args, log, n_annot)
+#=
+function _read_M(args, n_annot)
     # Read M (--M, --M-file, etc)
     if args.M:
         try:
             M_annot = [float(x) for x in _splitp(args.M)]
         except ValueError as e:
-            raise ValueError('Could not cast --M to float: ' + str(e.args))
+            raise ValueError("Could not cast --M to float: " + str(e.args))
     else:
         if args.ref_ld:
             M_annot = ps.M_fromlist(
@@ -68,18 +69,18 @@ function _read_M(args, log, n_annot)
         M_annot = np.array(M_annot).reshape((1, n_annot))
     except ValueError as e:
         raise ValueError(
-            '# terms in --M must match # of LD Scores in --ref-ld.\n' + str(e.args))
+            "# terms in --M must match # of LD Scores in --ref-ld.\n" + str(e.args))
 
     return M_annot
 end
 
-function _check_variance(log, M_annot, ref_ld)
+function _check_variance(M_annot, ref_ld)
     # Remove zero-variance LD Scores
     ii = ref_ld.ix[:, 1:].var() == 0  # NB there is a SNP column here
     if ii.all()
-        raise ValueError('All LD Scores have zero variance.')
+        raise ValueError("All LD Scores have zero variance.")
     else:
-        log.log('Removing partitioned LD Scores with zero variance.')
+        log.log("Removing partitioned LD Scores with zero variance.")
         ii_snp = np.array([True] + list(~ii))
         ii_m = np.array(~ii)
         ref_ld = ref_ld.ix[:, ii_snp]
@@ -88,25 +89,25 @@ function _check_variance(log, M_annot, ref_ld)
     return M_annot, ref_ld, i
 end
 
-function _read_w_ld(args, log)
+function _read_w_ld(args)
     # Read regression SNP LD
-    if (args.w_ld and ',' in args.w_ld) or (args.w_ld_chr and ',' in args.w_ld_chr)
+    if (args.w_ld and "," in args.w_ld) or (args.w_ld_chr and "," in args.w_ld_chr)
         raise ValueError(
-            '--w-ld must point to a single fileset (no commas allowed).')
-    w_ld = _read_chr_split_files(args.w_ld_chr, args.w_ld, log,
-                                 'regression weight LD Score', ps.ldscore_fromlist)
+            "--w-ld must point to a single fileset (no commas allowed).")
+    w_ld = _read_chr_split_files(args.w_ld_chr, args.w_ld,
+                                 "regression weight LD Score", ps.ldscore_fromlist)
     if len(w_ld.columns) != 2:
-        raise ValueError('--w-ld may only have one LD Score column.')
-    w_ld.columns = ['SNP', 'LD_weights']  # prevent colname conflicts w/ ref ld
+        raise ValueError("--w-ld may only have one LD Score column.")
+    w_ld.columns = ["SNP", "LD_weights"]  # prevent colname conflicts w/ ref ld
     log.log(
-        'Read regression weight LD Scores for {N} SNPs.'.format(N=len(w_ld)))
+        "Read regression weight LD Scores for {N} SNPs.".format(N=len(w_ld)))
     return w_ld
 end
 
-function _merge_and_log(ld, sumstats, noun, log)
+function _merge_and_log(ld, sumstats, noun)
     # Wrap smart merge with log messages about # of SNPs
     sumstats = smart_merge(ld, sumstats)
-    msg = 'After merging with {F}, {N} SNPs remain.'
+    msg = "After merging with {F}, {N} SNPs remain."
     if len(sumstats) == 0:
         raise ValueError(msg.format(N=len(sumstats), F=noun))
     else:
@@ -114,18 +115,19 @@ function _merge_and_log(ld, sumstats, noun, log)
 
     return sumstats
 end
+=#
 
 
 # TODO
-function _read_ld_sumstats(args, log, fh; alleles = false)
-    sumstats = _read_sumstats(args, log, fh; alleles=alleles, dropna=dropna)
-    ref_ld = _read_ref_ld(args, log)
+function _read_ld_sumstats(args, fh; alleles=false)
+    sumstats = _read_sumstats(args, fh; alleles=alleles, dropna=dropna)
+    ref_ld = _read_ref_ld(args)
     n_annot = size(ref_ld.columns) - 1
-    M_annot = _read_M(args, log, n_annot)
-    M_annot, ref_ld, novar_cols = _check_variance(log, M_annot, ref_ld)
-    w_ld = _read_w_ld(args, log)
-    sumstats = _merge_and_log(ref_ld, sumstats, "reference panel LD", log)
-    sumstats = _merge_and_log(sumstats, w_ld, "regression SNP LD", log)
+    M_annot = _read_M(args, n_annot)
+    M_annot, ref_ld, novar_cols = _check_variance(M_annot, ref_ld)
+    w_ld = _read_w_ld(args)
+    sumstats = _merge_and_log(ref_ld, sumstats, "reference panel LD")
+    sumstats = _merge_and_log(sumstats, w_ld, "regression SNP LD")
     w_ld_cname = sumstats.columns[-1]
     ref_ld_cnames = ref_ld.columns[1:len(ref_ld.columns)]
 
@@ -133,7 +135,7 @@ function _read_ld_sumstats(args, log, fh; alleles = false)
 end
 
 # TODO
-function estimate_h2(args::Dict, log)
+function estimate_h2(args::Dict)
     args = Dict([
         ("h2", "height.sumstats.gz"),
         ("ref-ld-chr", "eur_w_ld_chr/"),
@@ -153,15 +155,16 @@ function estimate_h2(args::Dict, log)
     #    args.intercept_h2 = 1
 
     M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols = _read_ld_sumstats(
-        args, log, args["h2"])
+        args, args["h2"])
     ref_ld = np.array(sumstats[ref_ld_cnames])
-    _check_ld_condnum(args, log, ref_ld_cnames)
-    _warn_length(log, sumstats)
+    _check_ld_condnum(args, ref_ld_cnames)
+    _warn_length(sumstats)
     n_snp = len(sumstats)
     n_blocks = min(n_snp, args.n_blocks)
     n_annot = len(ref_ld_cnames)
     χ²_max = args.χ²_max
-    old_weights = False
+    old_weights = false
+    #=
     if n_annot == 1:
         if args.two_step is None and args.intercept_h2 is None:
             args.two_step = 30
@@ -186,11 +189,12 @@ function estimate_h2(args::Dict, log)
 
 
     if args.overlap_annot:
-        overlap_matrix, M_tot = _read_annot(args, log)
+        overlap_matrix, M_tot = _read_annot(args)
 
         # overlap_matrix = overlap_matrix[np.array(~novar_cols), np.array(~novar_cols)]#np.logical_not
         df_results = ĥ²._overlap_output(ref_ld_cnames, overlap_matrix, M_annot, M_tot, args.print_coefficients)
         df_results.to_csv(args.out+".results", sep="\t", index=False)
 
     return ĥ²
+    =#
 end

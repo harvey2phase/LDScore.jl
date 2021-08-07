@@ -1,3 +1,5 @@
+# TODO turn this into a module
+
 """
 To use this abstract type and avaliable functions,
 create a subtype and implement the necessary functions.

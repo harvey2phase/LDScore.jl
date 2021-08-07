@@ -3,6 +3,8 @@ function test_print(name, var)
     println(var)
 end
 
+# TODO turn this into a module
+
 mutable struct Hsq <: LD_Score_Regression
     y
     x
