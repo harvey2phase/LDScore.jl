@@ -90,9 +90,15 @@ end
         ld = ones((10, 1)) .* 100
         N = ones((10, 1)) .* 100000
         M = 1e7
-        agg = aggregate(hsq, chisq, ld, N, M, nothing)
+        agg = aggregate(hsq, chisq, ld, N, M)
         approx(agg, 0.5, eps)
-        agg = aggregate(hsq, chisq, ld, N, M, 1.5)
+        agg = aggregate(hsq, chisq, ld, N, M; intercept=1.5)
         approx(agg, 0, eps)
     end
 end
+
+function f(x; y=3)
+    x + y
+end
+
+f(3; y=9)

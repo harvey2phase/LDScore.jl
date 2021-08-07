@@ -29,7 +29,7 @@ end
 """
 Set default intecept = nothing
 """
-function aggregate(reg::LD_Score_Regression, y, x, N, M, intercept)
+function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
     if intercept == nothing
         intercept = reg.__null_intercept__
     end
@@ -69,7 +69,7 @@ function ld_score_regression(
     reg.intercept = intercept
     reg.n_blocks = n_blocks
 
-    tot_agg = aggregate(reg, y, x_tot, N, M_tot, intercept)
+    tot_agg = aggregate(reg, y, x_tot, N, M_tot; intercept=intercept)
     initial_w = update_weights(
         reg, x_tot, w, N, M_tot, tot_agg, intercept,
     )
