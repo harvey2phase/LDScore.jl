@@ -68,19 +68,19 @@ def read_cts(fh, match_snps):
 Parses .sumstats files. See docs/file_formats_sumstats.txt
 """
 function sumstats(fh; alleles=False, dropna=True)
-    dtype_dict = {"SNP": str,   "Z": float, "N": float, "A1": str, "A2": str}
+    dtype_dict = {"SNP": str,  "Z": float, "N": float, "A1": str, "A2": str}
     compression = get_compression(fh)
     usecols = ["SNP", "Z", "N"]
-    if alleles:
-        usecols += ["A1", "A2"]
+    if alleles usecols += ["A1", "A2"] end
 
     try:
         x = read_csv(fh, usecols=usecols, dtype=dtype_dict, compression=compression)
     except (AttributeError, ValueError) as e:
         raise ValueError("Improperly formatted sumstats file: " + str(e.args))
 
-    if dropna:
+    if dropna
         x = x.dropna(how="any")
+    end
 
     return x
 end
