@@ -96,9 +96,3 @@ end
         approx(agg, 0, eps)
     end
 end
-
-function f(x; y=3)
-    x + y
-end
-
-f(3; y=9)
