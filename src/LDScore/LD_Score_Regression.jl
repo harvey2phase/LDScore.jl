@@ -35,8 +35,6 @@ function aggregate(
     end
 
     num = M * (mean(y) - intercept)
-    println("num")
-    println(num)
     denom = mean(x .* N)
     return num / denom
 end

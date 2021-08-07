@@ -3,7 +3,6 @@ function test_print(name, var)
     println(var)
 end
 
-
 mutable struct Hsq <: LD_Score_Regression
     y
     x
@@ -46,7 +45,6 @@ end
 function hsq_weights(ld, w_ld, N, M, hsq, intercept)
     if intercept == nothing intercept = 1.0 end
     M = M[1][1]
-    test_print("M", M)
     hsq = max(maximum(hsq), 0.0)
     hsq = min(hsq, 1.0)
     ld = fmax(ld, 1.0)
