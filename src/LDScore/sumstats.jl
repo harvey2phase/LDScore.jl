@@ -30,13 +30,12 @@ end
 function _read_sumstats(args, fh; alleles=false, dropna=false)
     # Parse summary statistics
     @info "Reading summary statistics from" fh
-    sumstats = sumstats(fh, alleles=alleles, dropna=dropna)
+    sumstats = Parse.sumstats(fh, alleles=alleles, dropna=dropna)
     @info "Read summary statistics for" size(sumstats) "SNPs."
-    m = len(sumstats)
+    m = size(sumstats)
     sumstats = sumstats.drop_duplicates(subset="SNP")
     if m > size(sumstats)
-        log.log(
-            "Dropped {M} SNPs with duplicated rs numbers.".format(M=m - len(sumstats)))
+        @info "Dropped SNPs with duplicated rs numbers:" m-size(sumstats)
     end
     return sumstats
 end
@@ -120,7 +119,7 @@ end
 
 
 # TODO
-function _read_ld_sumstats(args, fh; alleles=false)
+function _read_ld_sumstats(args, fh; alleles=false, dropna=true)
     sumstats = _read_sumstats(args, fh; alleles=alleles, dropna=dropna)
     ref_ld = _read_ref_ld(args)
     n_annot = size(ref_ld.columns) - 1

@@ -1,8 +1,10 @@
+include("../src/Parse/Parse.jl")
 include("../src/LDScoreJulia.jl")
 
 using Main
-using Main.LDScoreJulia
 using Test
+using Main.Parse
+using Main.LDScoreJulia
 
 approx(x, y, eps) = abs(x - y) <= eps
 
