@@ -1,11 +1,7 @@
-include("../Parse/Parse.jl")
-using Main.Parse
+#using Pkg; Pkg.add("Revise")
+#using Revise
 
-function get_compression(fh)
-    if endswith(fh, "gz") return "gzip"
-    elseif endswith(fh, "bz2") return "bz2"
-    else return nothing end
-end
+include("parse.jl")
 
 function sumstats(fh; alleles=false, dropna=true)
     # Parses .sumstats files. See docs/file_formats_sumstats.txt
@@ -28,9 +24,9 @@ function sumstats(fh; alleles=false, dropna=true)
 end
 
 function _read_sumstats(args, fh; alleles=false, dropna=false)
-    # Parse summary statistics
+    # Parser summary statistics
     @info "Reading summary statistics from" fh
-    sumstats = Parse.sumstats(fh, alleles=alleles, dropna=dropna)
+    sumstats = parse_sumstats(fh, alleles=alleles, dropna=dropna)
     @info "Read summary statistics for" size(sumstats) "SNPs."
     m = size(sumstats)
     sumstats = sumstats.drop_duplicates(subset="SNP")
@@ -136,12 +132,6 @@ end
 
 # TODO
 function estimate_h2(args::Dict)
-    args = Dict([
-        ("h2", "height.sumstats.gz"),
-        ("ref-ld-chr", "eur_w_ld_chr/"),
-        ("w-ld-chr", "eur_w_ld_chr/"),
-        ("out", "height_h2"),
-    ])
     # Estimate h² and partitioned h².
 
     #if haskey(args, "samp_prev") && haskey(args, "pop_prev")
