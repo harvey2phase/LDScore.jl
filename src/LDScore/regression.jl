@@ -93,13 +93,9 @@ function make_ld_score_regression(
     )
     Nbar = mean(N)
     x = N .* x / Nbar
-    println("X AFTER A BIT")
-    println(x)
 
     if !reg.constrain_intercept
         x, x_tot = append_intercept(x), append_intercept(x_tot)
-        println("x_tot")
-        println(x_tot)
         yp = y
     else
         yp = y - intercept
