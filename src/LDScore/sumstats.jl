@@ -1,5 +1,8 @@
 using Pandas
 
+include("../Parse/Parse.jl")
+using Main.Parse
+
 function get_compression(fh)
     if endswith(fh, "gz") return "gzip"
     elseif endswith(fh, "bz2") return "bz2"
@@ -29,7 +32,7 @@ end
 function _read_sumstats(args, fh; alleles=false, dropna=false)
     # Parse summary statistics
     @info "Reading summary statistics from" fh
-    sumstats = ps.sumstats(fh, alleles=alleles, dropna=dropna)
+    sumstats = sumstats(fh, alleles=alleles, dropna=dropna)
     @info "Read summary statistics for" size(sumstats) "SNPs."
     m = len(sumstats)
     sumstats = sumstats.drop_duplicates(subset="SNP")
