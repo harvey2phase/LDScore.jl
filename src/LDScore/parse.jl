@@ -1,48 +1,10 @@
 using Pandas
 
-#=
-def series_eq(x, y):
-    """Compare series, return False if lengths not equal."""
-    return len(x) == len(y) and (x == y).all()
-
-
-def read_csv(fh, **kwargs):
-    return pd.read_csv(fh, delim_whitespace=True, na_values=".", **kwargs)
-
-
-def sub_chr(s, chrom):
-    """Substitute chr for @, else append chr to the end of str."""
-    if "@" not in s:
-        s += "@"
-
-    return s.replace("@", str(chrom))
-
-
-def get_present_chrs(fh, num):
-    """Checks which chromosomes exist, assuming that the file base will be appended by a dot in any suffix."""
-    chrs = []
-    for chrom in xrange(1,num):
-        if glob.glob(sub_chr(fh, chrom) + ".*"):
-            chrs.append(chrom)
-    return chrs
-
-
-def which_compression(fh):
-    """Given a file prefix, figure out what sort of compression to use."""
-    if os.access(fh + ".bz2", 4):
-        suffix = ".bz2"
-        compression = "bz2"
-    elif os.access(fh + ".gz", 4):
-        suffix = ".gz"
-        compression = "gzip"
-    elif os.access(fh, 4):
-        suffix = ""
-        compression = None
-    else:
-        raise IOError("Could not open {F}[./gz/bz2]".format(F=fh))
-
-    return suffix, compression
-=#
+function series_eq(x, y):
+function read_csv(fh, **kwargs):
+function sub_chr(s, chrom):
+function get_present_chrs(fh, num):
+function which_compression(fh):
 
 function get_compression(fh)
     if endswith(fh, "gz") return "gzip"
@@ -51,7 +13,7 @@ function get_compression(fh)
 end
 
 #=
-def read_cts(fh, match_snps):
+function read_cts(fh, match_snps):
     """Reads files for --cts-bin."""
     compression = get_compression(fh)
     cts = read_csv(fh, compression=compression, header=None, names=["SNP", "ANNOT"])
@@ -94,7 +56,7 @@ function parse_sumstats(fh; alleles=false, dropna=true)
 end
 
 #=
-def ldscore_fromlist(flist, num=None):
+function ldscore_fromlist(flist, num=None):
     """Sideways concatenation of a list of LD Score files."""
     ldscore_array = []
     for i, fh in enumerate(flist):
@@ -112,7 +74,7 @@ def ldscore_fromlist(flist, num=None):
     return pd.concat(ldscore_array, axis=1)
 
 
-def l2_parser(fh, compression):
+function l2_parser(fh, compression):
     """Parse LD Score files"""
     x = read_csv(fh, header=0, compression=compression)
     if "MAF" in x.columns and "CM" in x.columns:  # for backwards compatibility w/ v<1.0.0
@@ -120,7 +82,7 @@ def l2_parser(fh, compression):
     return x
 
 
-def annot_parser(fh, compression, frqfile_full=None, compression_frq=None):
+function annot_parser(fh, compression, frqfile_full=None, compression_frq=None):
     """Parse annot files"""
     df_annot = read_csv(fh, header=0, compression=compression).drop(["SNP","CHR", "BP", "CM"], axis=1, errors="ignore").astype(float)
     if frqfile_full is not None:
@@ -129,7 +91,7 @@ def annot_parser(fh, compression, frqfile_full=None, compression_frq=None):
     return df_annot
 
 
-def frq_parser(fh, compression):
+function frq_parser(fh, compression):
     """Parse frequency files."""
     df = read_csv(fh, header=0, compression=compression)
     if "MAF" in df.columns:
@@ -137,7 +99,7 @@ def frq_parser(fh, compression):
     return df[["SNP", "FRQ"]]
 
 
-def ldscore(fh, num=None):
+function ldscore(fh, num=None):
     """Parse .l2.ldscore files, split across num chromosomes. See docs/file_formats_ld.txt."""
     suffix = ".l2.ldscore"
     if num is not None:  # num files, e.g., one per chromosome
@@ -155,7 +117,7 @@ def ldscore(fh, num=None):
     return x
 
 
-def M(fh, num=None, N=2, common=False):
+function M(fh, num=None, N=2, common=False):
     """Parses .l{N}.M files, split across num chromosomes. See docs/file_formats_ld.txt."""
     parsefunc = lambda y: [float(z) for z in open(y, "r").readline().split()]
     suffix = ".l" + str(N) + ".M"
@@ -170,12 +132,12 @@ def M(fh, num=None, N=2, common=False):
     return np.array(x).reshape((1, len(x)))
 
 
-def M_fromlist(flist, num=None, N=2, common=False):
+function M_fromlist(flist, num=None, N=2, common=False):
     """Read a list of .M* files and concatenate sideways."""
     return np.hstack([M(fh, num, N, common) for fh in flist])
 
 
-def annot(fh_list, num=None, frqfile=None):
+function annot(fh_list, num=None, frqfile=None):
     """
     Parses .annot files and returns an overlap matrix. See docs/file_formats_ld.txt.
     If num is not None, parses .annot files split across [num] chromosomes (e.g., the
@@ -241,11 +203,11 @@ def annot(fh_list, num=None, frqfile=None):
     return x, M_tot
 
 
-def __ID_List_Factory__(colnames, keepcol, fname_end, header=None, usecols=None):
+function __ID_List_Factory__(colnames, keepcol, fname_end, header=None, usecols=None):
 
     class IDContainer(object):
 
-        def __init__(self, fname):
+        function __init__(self, fname):
             self.__usecols__ = usecols
             self.__colnames__ = colnames
             self.__keepcol__ = keepcol
@@ -254,7 +216,7 @@ def __ID_List_Factory__(colnames, keepcol, fname_end, header=None, usecols=None)
             self.__read__(fname)
             self.n = len(self.df)
 
-        def __read__(self, fname):
+        function __read__(self, fname):
             end = self.__fname_end__
             if end and not fname.endswith(end):
                 raise ValueError("{f} filename must end in {f}".format(f=end))
@@ -269,7 +231,7 @@ def __ID_List_Factory__(colnames, keepcol, fname_end, header=None, usecols=None)
             if self.__keepcol__ is not None:
                 self.IDList = self.df.iloc[:, [self.__keepcol__]].astype("object")
 
-        def loj(self, externalDf):
+        function loj(self, externalDf):
             """Returns indices of those elements of self.IDList that appear in exernalDf."""
             r = externalDf.columns[0]
             l = self.IDList.columns[0]

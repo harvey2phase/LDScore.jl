@@ -3,13 +3,14 @@ using Statistics
 include("LD_Score_Regression.jl")
 include("Hsq.jl")
 
-# TODO improve error-handeling to the Julian way
+# TODO improve error-handeling (the Julian way)
 
 function fmax(col_vec, val)
     new = zeros(0)
     for a in col_vec append!(new, max(a, val)) end
     return reshape(new, (size(new)...,1))
 end
+
 
 function append_intercept(x)
     n_row = size(x)[1]
