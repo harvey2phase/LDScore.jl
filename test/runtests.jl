@@ -1,3 +1,8 @@
+"""
+Basic tests for the `Hsq` struct and associated function.
+Tests all pass.
+"""
+
 include("../src/LDScoreJulia.jl")
 
 using Main

@@ -1,5 +1,7 @@
-#using Pkg; Pkg.add("Revise")
-#using Revise
+"""
+Tests for `estimate_h2`.
+Tests all fail because `ld_score_regression` is only half-implemented.
+"""
 
 include("../src/LDScoreJulia.jl")
 
@@ -37,4 +39,5 @@ x = LDScoreJulia.estimate_h2(
         ("overlap_annot", false),
     ])
 )
-print(x.tot)
+
+# TODO finish implementing `ld_score_regression`
