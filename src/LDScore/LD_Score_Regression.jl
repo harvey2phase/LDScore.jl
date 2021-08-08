@@ -80,30 +80,8 @@ function ld_score_regression(
                 append!(x1, x[i])
             end
         end
-    println("THE END")
 
-    #TODO
-        #=
-        yp1, w1, N1, initial_w1 = map(
-            lambda a: a[step1_ii].reshape((n1, 1)), (yp, w, N, initial_w))
-            update_func1 = lambda a: self._update_func(
-            a, x1, w1, N1, M_tot, Nbar, ii=step1_ii)
-            step1_jknife = IRWLS(
-            x1, yp1, update_func1, n_blocks, slow=slow, w=initial_w1)
-            step1_int, _ = self._intercept(step1_jknife)
-            yp = yp - step1_int
-            x = remove_intercept(x)
-            x_tot = remove_intercept(x_tot)
-            update_func2 = lambda a: self._update_func(
-            a, x_tot, w, N, M_tot, Nbar, step1_int)
-            s = update_separators(step1_jknife.separators, step1_ii)
-            step2_jknife = IRWLS(
-            x, yp, update_func2, n_blocks, slow=slow, w=initial_w, separators=s)
-            c = np.sum(np.multiply(initial_w, x)) / \
-            np.sum(np.multiply(initial_w, np.square(x)))
-            jknife = self._combine_twostep_jknives(
-            step1_jknife, step2_jknife, M_tot, c, Nbar)
-        =#
+    # TODO finish implementing this function
     end
 end
 
