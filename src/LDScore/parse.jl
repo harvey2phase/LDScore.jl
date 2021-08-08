@@ -1,11 +1,26 @@
-using Pandas
+using CSV
 
-function series_eq(x, y):
-function read_csv(fh, **kwargs):
-function sub_chr(s, chrom):
-function get_present_chrs(fh, num):
-function which_compression(fh):
-function read_cts(fh, match_snps):
+
+# TODO
+function series_eq(x, y) end
+function read_csv(fh, **kwargs) end
+function sub_chr(s, chrom) end
+function get_present_chrs(fh, num) end
+function which_compression(fh) end
+function read_cts(fh, match_snps) end
+function ldscore_fromlist(flist, num=None) end
+function l2_parser(fh, compression) end
+function annot_parser(fh, compression, frqfile_full=None, compression_frq=None) end
+function frq_parser(fh, compression) end
+function ldscore(fh, num=None) end
+function M(fh, num=None, N=2, common=False) end
+function M_fromlist(flist, num=None, N=2, common=False) end
+function annot(fh_list, num=None, frqfile=None) end
+function __ID_List_Factory__(colnames, keepcol, fname_end, header=None, usecols=None) end
+    struct IDContainer end
+        function __init__(self, fname) end
+        function __read__(self, fname) end
+        function loj(self, externalDf) end
 
 
 function get_compression(fh)
@@ -16,48 +31,11 @@ end
 
 
 function parse_sumstats(fh; alleles=false, dropna=true)
-    dtype_dict = Dict([
-        ("SNP", String),
-        #("Z", Float),
-      #  ("N", float),
-      #  ("A1", str),
-      #  ("A2", str),
-    ])
+    @info "Reading from:" fh
+    x = CSV.File(fh)
 
-    compression = get_compression(fh)
-    usecols = ["SNP", "Z", "N"]
-    if alleles usecols += ["A1", "A2"] end
-    @info "fh" fh
+    if dropna x = x.dropna(how="any") end # TODO double check Julian equivalent
 
-    @info "NEW"
-    x = Pandas.read_csv(fh, usecols=usecols, dtype=dtype_dict, compression=compression)
-    #=
-    try
-        x = Pandas.read_csv(fh)
-    catch e
-        @error "Improperly formatted sumstats file."
-    end
-    =#
-
-    if dropna
-        x = x.dropna(how="any")
-    end
     @info x
-
     return x
 end
-
-
-function ldscore_fromlist(flist, num=None):
-function l2_parser(fh, compression):
-function annot_parser(fh, compression, frqfile_full=None, compression_frq=None):
-function frq_parser(fh, compression):
-function ldscore(fh, num=None):
-function M(fh, num=None, N=2, common=False):
-function M_fromlist(flist, num=None, N=2, common=False):
-function annot(fh_list, num=None, frqfile=None):
-function __ID_List_Factory__(colnames, keepcol, fname_end, header=None, usecols=None):
-    struct IDContainer end
-        function __init__(self, fname):
-        function __read__(self, fname):
-        function loj(self, externalDf):
