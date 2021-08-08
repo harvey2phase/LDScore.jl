@@ -25,8 +25,8 @@ To estimate SNP-heritability, we need three sources of data:
 
 LD scores for European and Asian populations can be directly downloaded from the [original LDSC website](https://github.com/bulik/ldsc).
 
-# LD Score Regression
+## LD Score Regression
 LD Score regression quantifies contribution of polygenic signals and confounding biases in the inflation of the distribution of test statistic in genome-wide association studies (1); it does this by examinig the relationship between test statistics and linkage disequilibrium 
 
-# References
+## References
 1. Schizophrenia Working Group of the Psychiatric Genomics Consortium, Bulik-Sullivan BK, Loh P-R, Finucane HK, Ripke S, Yang J, et al. LD Score regression distinguishes confounding from polygenicity in genome-wide association studies. Nat Genet. 2015 Mar;47(3):291–5. 
