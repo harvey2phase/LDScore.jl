@@ -84,26 +84,26 @@ function overlap_output(
     diff_est = np.dot(overlap_matrix_diff,self.coef)
     diff_cov = np.dot(np.dot(overlap_matrix_diff,self.coef_cov),overlap_matrix_diff.T)
     diff_se = np.sqrt(np.diag(diff_cov))
-    diff_p = ['NA' if diff_se[i]==0 else 2*tdist.sf(abs(diff_est[i]/diff_se[i]),self.n_blocks) \
+    diff_p = ["NA" if diff_se[i]==0 else 2*tdist.sf(abs(diff_est[i]/diff_se[i]),self.n_blocks) \
         for i in range(self.n_annot)]
 
     df = pd.DataFrame({
-        'Category': category_names,
-        'Prop._SNPs': one_d_convert(prop_M_overlap),
-        'Prop._h2': one_d_convert(prop_hsq_overlap),
-        'Prop._h2_std_error': one_d_convert(prop_hsq_overlap_se),
-        'Enrichment': one_d_convert(enrichment),
-        'Enrichment_std_error': one_d_convert(enrichment_se),
-        'Enrichment_p':diff_p,
-        'Coefficient': one_d_convert(self.coef),
-        'Coefficient_std_error': self.coef_se,
-        'Coefficient_z-score': one_d_convert(self.coef) / one_d_convert(self.coef_se)
+        "Category": category_names,
+        "Prop._SNPs": one_d_convert(prop_M_overlap),
+        "Prop._h2": one_d_convert(prop_hsq_overlap),
+        "Prop._h2_std_error": one_d_convert(prop_hsq_overlap_se),
+        "Enrichment": one_d_convert(enrichment),
+        "Enrichment_std_error": one_d_convert(enrichment_se),
+        "Enrichment_p":diff_p,
+        "Coefficient": one_d_convert(self.coef),
+        "Coefficient_std_error": self.coef_se,
+        "Coefficient_z-score": one_d_convert(self.coef) / one_d_convert(self.coef_se)
     })
     if print_coefficients:
-        df = df[['Category', 'Prop._SNPs', 'Prop._h2', 'Prop._h2_std_error',
-                'Enrichment','Enrichment_std_error', 'Enrichment_p',
-                 'Coefficient', 'Coefficient_std_error','Coefficient_z-score']]
+        df = df[["Category", "Prop._SNPs", "Prop._h2", "Prop._h2_std_error",
+                "Enrichment","Enrichment_std_error", "Enrichment_p",
+                 "Coefficient", "Coefficient_std_error","Coefficient_z-score"]]
     else:
-        df = df[['Category', 'Prop._SNPs', 'Prop._h2', 'Prop._h2_std_error',
-                'Enrichment','Enrichment_std_error', 'Enrichment_p']]
+        df = df[["Category", "Prop._SNPs", "Prop._h2", "Prop._h2_std_error",
+                "Enrichment","Enrichment_std_error", "Enrichment_p"]]
     return df
