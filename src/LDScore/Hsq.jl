@@ -64,26 +64,33 @@ function overlap_output(
     overlap_matrix_prop = zeros([hsq.n_annot, hsq.n_annot])
     for i in range(hsq.n_annot)
         overlap_matrix_prop[i, :] = overlap_matrix[i, :] / M_annot
+    end
 
+    #= TODO
     prop_hsq_overlap = np.dot(
         overlap_matrix_prop, hsq.prop.T).reshape((1, hsq.n_annot))
     prop_hsq_overlap_var = np.diag(
         np.dot(np.dot(overlap_matrix_prop, hsq.prop_cov), overlap_matrix_prop.T))
     prop_hsq_overlap_se = np.sqrt(
         np.maximum(0, prop_hsq_overlap_var)).reshape((1, hsq.n_annot))
-    one_d_convert = lambda x: np.array(x).reshape(np.prod(x.shape))
+    one_d_convert(x) = reshape(x, (prod(x.shape)))
     prop_M_overlap = M_annot / M_tot
     enrichment = prop_hsq_overlap / prop_M_overlap
     enrichment_se = prop_hsq_overlap_se / prop_M_overlap
     overlap_matrix_diff = np.zeros([hsq.n_annot,hsq.n_annot])
-    for i in range(hsq.n_annot):
-        if not M_tot == M_annot[0,i]:
-            overlap_matrix_diff[i, :] = overlap_matrix[i,:]/M_annot[0,i] - \
-                (M_annot - overlap_matrix[i,:]) / (M_tot-M_annot[0,i])
+    for i in range(hsq.n_annot)
+        if not M_tot == M_annot[0, i]
+            overlap_matrix_diff[i, :] = (
+                overlap_matrix[i,:]/M_annot[0,i]
+                - (M_annot - overlap_matrix[i,:]) / (M_tot-M_annot[0,i])
+            )
+        end
+    end
 
     diff_est = np.dot(overlap_matrix_diff,hsq.coef)
     diff_cov = np.dot(np.dot(overlap_matrix_diff,hsq.coef_cov),overlap_matrix_diff.T)
     diff_se = np.sqrt(np.diag(diff_cov))
+
     diff_p = ["NA" if diff_se[i]==0 else 2*tdist.sf(abs(diff_est[i]/diff_se[i]),hsq.n_blocks) \
         for i in range(hsq.n_annot)]
 
@@ -99,11 +106,23 @@ function overlap_output(
         "Coefficient_std_error": hsq.coef_se,
         "Coefficient_z-score": one_d_convert(hsq.coef) / one_d_convert(hsq.coef_se)
     })
-    if print_coefficients:
-        df = df[["Category", "Prop._SNPs", "Prop._h2", "Prop._h2_std_error",
+    if print_coefficients
+        return df[
+            !,
+            [
+                "Category", "Prop._SNPs", "Prop._h2", "Prop._h2_std_error",
                 "Enrichment","Enrichment_std_error", "Enrichment_p",
-                 "Coefficient", "Coefficient_std_error","Coefficient_z-score"]]
-    else:
-        df = df[["Category", "Prop._SNPs", "Prop._h2", "Prop._h2_std_error",
-                "Enrichment","Enrichment_std_error", "Enrichment_p"]]
-    return df
+                "Coefficient", "Coefficient_std_error","Coefficient_z-score",
+            ],
+        ]
+    else
+        return df[
+            !,
+            [
+                "Category", "Prop._SNPs", "Prop._h2", "Prop._h2_std_error",
+                "Enrichment","Enrichment_std_error", "Enrichment_p",
+            ],
+        ]
+    end
+    =#
+end

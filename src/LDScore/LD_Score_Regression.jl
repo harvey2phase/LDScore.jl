@@ -41,23 +41,7 @@ function ld_score_regression(
     reg::LD_Score_Regression,
     y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
 )
-    #= TODO
-    for i in [y, x, w, M, N]:
-        try:
-            if len(i.shape) != 2:
-                raise TypeError('Arguments must be 2D arrays.')
-        except AttributeError:
-            raise TypeError('Arguments must be arrays.')
-    =#
-
     n_snp, reg.n_annot = size(x)
-    #= TODO
-    if any(i.shape != (n_snp, 1) for i in [y, w, N]):
-        raise ValueError(
-            'N, weights and response (z1z2 or χ²) must have shape (n_snp, 1).')
-    if M.shape != (1, self.n_annot):
-        raise ValueError('M must have shape (1, n_annot).')
-    =#
 
     M_tot = sum(M)
     # shape should be [n_snp, 1]
@@ -96,6 +80,7 @@ function ld_score_regression(
                 append!(x1, x[i])
             end
         end
+    println("THE END")
 
     #TODO
         #=

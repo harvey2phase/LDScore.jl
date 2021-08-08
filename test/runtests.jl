@@ -1,7 +1,4 @@
-using Pkg; Pkg.add("Revise")
-using Revise
-
-#include("../src/LDScoreJulia.jl")
+include("../src/LDScoreJulia.jl")
 
 using Main
 using Main.LDScoreJulia
