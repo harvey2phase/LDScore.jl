@@ -1,5 +1,3 @@
-# TODO turn this into a module
-
 """
 To use this abstract type and avaliable functions,
 create a subtype and implement the necessary functions.
@@ -56,7 +54,7 @@ function ld_score_regression(
     #= TODO
     if any(i.shape != (n_snp, 1) for i in [y, w, N]):
         raise ValueError(
-            'N, weights and response (z1z2 or chisq) must have shape (n_snp, 1).')
+            'N, weights and response (z1z2 or χ²) must have shape (n_snp, 1).')
     if M.shape != (1, self.n_annot):
         raise ValueError('M must have shape (1, n_annot).')
     =#
@@ -98,6 +96,8 @@ function ld_score_regression(
                 append!(x1, x[i])
             end
         end
+
+    #TODO
         #=
         yp1, w1, N1, initial_w1 = map(
             lambda a: a[step1_ii].reshape((n1, 1)), (yp, w, N, initial_w))

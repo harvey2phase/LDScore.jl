@@ -1,3 +1,14 @@
+function test_print(name, var)
+    println("=================================================================")
+    println(name)
+    println(var)
+    println("=================================================================")
+end
+
+using CSV
+using DataFrames
+
+
 #using Pkg; Pkg.add("Revise")
 #using Revise
 
@@ -38,10 +49,9 @@ end
 
 function _read_ref_ld(args)
     # Read reference LD Scores
-    ref_ld = _read_chr_split_files(args.ref_ld_chr, args.ref_ld,
-                                   "reference panel LD Score", ps.ldscore_fromlist)
-    log.log(
-        "Read reference panel LD Scores for {N} SNPs.".format(N=len(ref_ld)))
+    ref_ld = _read_chr_split_files(args["ref_ld_chr"], args["ref_ld"],
+                                   "reference panel LD Score", ldscore_fromlist)
+    @info "Read reference panel LD Scores for {N} SNPs." len(ref_ld)
     return ref_ld
 end
 
@@ -113,21 +123,21 @@ function _merge_and_log(ld, sumstats, noun)
 end
 =#
 
+function _load_testset_1(args)
+    df_ref_id = DataFrames.DataFrame(CSV.File(args["ref_id"] * ".l2.ldscore"))
+    df_h2 = DataFrames.DataFrame(CSV.File(args["h2"]))
+
+    M_annot = [[155881.2526]]
+    w_ld_cname = "CHR"
+    ref_ld_cnames = ["LD_0"]
+    sumstats = DataFrames.innerjoin(df_ref_id, df_h2, on = "SNP")
+    novar_cols = Dict([("LD_0", false)])
+    return (M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols)
+end
 
 # TODO
-function _read_ld_sumstats(args, fh; alleles=false, dropna=true)
-    sumstats = _read_sumstats(args, fh; alleles=alleles, dropna=dropna)
-    ref_ld = _read_ref_ld(args)
-    n_annot = size(ref_ld.columns) - 1
-    M_annot = _read_M(args, n_annot)
-    M_annot, ref_ld, novar_cols = _check_variance(M_annot, ref_ld)
-    w_ld = _read_w_ld(args)
-    sumstats = _merge_and_log(ref_ld, sumstats, "reference panel LD")
-    sumstats = _merge_and_log(sumstats, w_ld, "regression SNP LD")
-    w_ld_cname = sumstats.columns[-1]
-    ref_ld_cnames = ref_ld.columns[1:len(ref_ld.columns)]
-
-    return (M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols)
+function _read_ld_sumstats(args; alleles=false, dropna=true)
+    return _load_testset_1(args)
 end
 
 # TODO
@@ -144,47 +154,51 @@ function estimate_h2(args::Dict)
     #if args.no_intercept:
     #    args.intercept_h2 = 1
 
-    M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols = _read_ld_sumstats(
-        args, args["h2"])
-    ref_ld = np.array(sumstats[ref_ld_cnames])
-    _check_ld_condnum(args, ref_ld_cnames)
-    _warn_length(sumstats)
-    n_snp = len(sumstats)
-    n_blocks = min(n_snp, args.n_blocks)
-    n_annot = len(ref_ld_cnames)
-    χ²_max = args.χ²_max
+    (M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols) = _read_ld_sumstats(
+        args)
+    ref_ld = (sumstats[!, "LD"])
+    n_snp = size(sumstats)[1]
+    test_print("n_snp", n_snp)
+    n_blocks = min(n_snp, args["n_blocks"])
+    n_annot = size(ref_ld_cnames)[1]
+    χ²_max = args["χ²_max"]
     old_weights = false
-    #=
-    if n_annot == 1:
-        if args.two_step is None and args.intercept_h2 is None:
-            args.two_step = 30
-    else:
-        old_weights = True
-        if args.χ²_max is None:
-            χ²_max = max(0.001*sumstats.N.max(), 80)
 
-    s = lambda x: np.array(x).reshape((n_snp, 1))
-    χ² = s(sumstats.Z**2)
-    if χ²_max is not None:
-        ii = np.ravel(χ² < χ²_max)
+    if n_annot == 1
+        if args["two_step"] == nothing && args["intercept_h2"] == nothing
+            args["two_step"] = 30
+        end
+    else
+        old_weights = true
+        if args["χ²_max"] == nothing
+            χ²_max = max(0.001 * max(sumstats[!, "N"]), 80)
+        end
+    end
+
+    s(x) = reshape(x, (n_snp, 1))
+    χ² = s(sumstats[!, "Z"] .^ 2)
+
+    if χ²_max != nothing
+        ii = vec(χ² < χ²_max)
         sumstats = sumstats.ix[ii, :]
 
-        n_snp = np.sum(ii)  # lambdas are late-binding, so this works
-        ref_ld = np.array(sumstats[ref_ld_cnames])
-        χ² = χ²[ii].reshape((n_snp, 1))
+        n_snp = sum(ii) # TODO double check that this works
+        ref_ld = [sumstats[ref_ld_cnames]]
+        χ² = reshape(χ²[ii], (n_snp, 1))
+    end
 
-    ĥ² = reg.Hsq(χ², ref_ld, s(sumstats[w_ld_cname]), s(sumstats.N),
-                     M_annot, n_blocks=n_blocks, intercept=args.intercept_h2,
-                     twostep=args.two_step, old_weights=old_weights)
+    ĥ² = Hsq(
+        χ², ref_ld, s(sumstats[!, w_ld_cname]), s(sumstats[!, "N"]), M_annot,
+        n_blocks, args["intercept_h2"], false, args["two_step"], old_weights,
+    )
 
-
-    if args.overlap_annot:
+    if args["overlap_annot"]
         overlap_matrix, M_tot = _read_annot(args)
 
         # overlap_matrix = overlap_matrix[np.array(~novar_cols), np.array(~novar_cols)]#np.logical_not
         df_results = ĥ²._overlap_output(ref_ld_cnames, overlap_matrix, M_annot, M_tot, args.print_coefficients)
         df_results.to_csv(args.out+".results", sep="\t", index=False)
+    end
 
     return ĥ²
-    =#
 end

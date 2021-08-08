@@ -1,9 +1,10 @@
-include("../src/LDScoreJulia.jl")
-include("../src/Parser/Parser.jl")
+using Pkg; Pkg.add("Revise")
+using Revise
+
+#include("../src/LDScoreJulia.jl")
 
 using Main
 using Main.LDScoreJulia
-using Main.Parser
 using Test
 
 approx(x, y, eps) = abs(x - y) <= eps
@@ -59,7 +60,7 @@ end
 @testset "Hsq functions" begin
     eps = 1.0e-6
 
-    chisq = ones((4, 1)) .* 4
+    χ² = ones((4, 1)) .* 4
     ld = ones((4, 1))
     w_ld = ones((4, 1))
     N = 9 .* ones((4, 1))
@@ -70,7 +71,7 @@ end
     twostep = nothing
     old_weights = false
     hsq = LDScoreJulia.Hsq(
-        chisq, ld, w_ld, N, M, n_blocks, intercept, slow, twostep, old_weights,
+        χ², ld, w_ld, N, M, n_blocks, intercept, slow, twostep, old_weights,
     )
 
     @testset "weights" begin
@@ -88,13 +89,13 @@ end
     end
 
     @testset "aggregate" begin
-        chisq = ones((10, 1)) .* 3 ./ 2
+        χ² = ones((10, 1)) .* 3 ./ 2
         ld = ones((10, 1)) .* 100
         N = ones((10, 1)) .* 100000
         M = 1e7
-        agg = aggregate(hsq, chisq, ld, N, M)
+        agg = aggregate(hsq, χ², ld, N, M)
         approx(agg, 0.5, eps)
-        agg = aggregate(hsq, chisq, ld, N, M; intercept=1.5)
+        agg = aggregate(hsq, χ², ld, N, M; intercept=1.5)
         approx(agg, 0, eps)
     end
 end
