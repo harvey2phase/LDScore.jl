@@ -1,5 +1,7 @@
 # LDScoreJulia
 
+LDSC implementation based on (1) implemented in Julia.
+
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://harvey2phase.github.io/LDScoreJulia.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://harvey2phase.github.io/LDScoreJulia.jl/dev)
 [![Build Status](https://travis-ci.com/harvey2phase/LDScoreJulia.jl.svg?branch=master)](https://travis-ci.com/harvey2phase/LDScoreJulia.jl)
