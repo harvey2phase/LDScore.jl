@@ -9,8 +9,10 @@
 [![Coverage](https://coveralls.io/repos/github/harvey2phase/LDScoreJulia.jl/badge.svg?branch=master)](https://coveralls.io/github/harvey2phase/LDScoreJulia.jl?branch=master)
 
 # To Do
-
 - `ld_score_regression` is not complete
 - `estimate_h2`
 	- Only has one test case
 	- Lots of error checks missing
+- Build struct `Gencov` the same way `Hsq` is built to reuse abstract type `LD_Score_Regression` functions
+
+*Note.* Ignore files that start with `Fake` or `fake`.

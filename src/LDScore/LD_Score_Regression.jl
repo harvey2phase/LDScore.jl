@@ -20,21 +20,18 @@ See `Hsq.jl` for a case study example.
 abstract type LD_Score_Regression end
 
 # TODO need to find jackknife library or implement it
-function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M):
-function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M):
-function _coef(reg::LD_Score_Regression, jknife, Nbar):
-function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov):
-function _tot(reg::LD_Score_Regression, cat, cat_cov):
-function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot):
-function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot):
-function _intercept(reg::LD_Score_Regression, jknife):
-function _combine_twostep_jknives(reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c, Nbar=1):
-
-
-function _delete_vals_tot(
-    reg::LD_Score_Regression,
-    )
-end
+function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
+function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
+function _coef(reg::LD_Score_Regression, jknife, Nbar) end
+function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
+function _tot(reg::LD_Score_Regression, cat, cat_cov) end
+function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
+function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
+function _intercept(reg::LD_Score_Regression, jknife) end
+function _combine_twostep_jknives(
+    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
+) end
+function _delete_vals_tot(reg::LD_Score_Regression) end
 
 
 function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
@@ -77,10 +74,14 @@ function ld_score_regression(
     end
 
     reg.twostep_filtered = nothing
-    if !(step1_ii == nothing) && reg.constrain_intercept
-        throw(ErrorException("twostep is not compatible with constrain_intercept."))
+    if step1_ii != nothing && reg.constrain_intercept
+        throw(ErrorException(
+            "twostep is not compatible with constrain_intercept."
+        ))
     elseif !(step1_ii == nothing) && reg.n_annot > 1
-        throw(ErrorException("twostep not compatible with partitioned LD Score yet."))
+        throw(ErrorException(
+            "twostep not compatible with partitioned LD Score yet."
+        ))
     elseif !(step1_ii == nothing)
         n1 = sum(step1_ii)
         reg.twostep_filtered = n_snp - n1
