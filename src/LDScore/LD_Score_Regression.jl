@@ -20,18 +20,18 @@ See `Hsq.jl` for a case study example.
 abstract type LD_Score_Regression end
 
 # TODO need to find jackknife library or implement it
-function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
-function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
-function _coef(reg::LD_Score_Regression, jknife, Nbar) end
-function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
-function _tot(reg::LD_Score_Regression, cat, cat_cov) end
-function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
-function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
-function _intercept(reg::LD_Score_Regression, jknife) end
-function _combine_twostep_jknives(
-    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
-) end
-function _delete_vals_tot(reg::LD_Score_Regression) end
+#function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
+#function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
+#function _coef(reg::LD_Score_Regression, jknife, Nbar) end
+#function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
+#function _tot(reg::LD_Score_Regression, cat, cat_cov) end
+#function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
+#function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
+#function _intercept(reg::LD_Score_Regression, jknife) end
+#function _combine_twostep_jknives(
+#    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
+#) end
+#function _delete_vals_tot(reg::LD_Score_Regression) end
 
 
 function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
@@ -49,7 +49,7 @@ function ld_score_regression(
     reg::LD_Score_Regression,
     y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
 )
-    n_snp, reg.n_annot = size(x)
+    n_snp, reg.n_annot = size(x) # TODO fix this
 
     M_tot = sum(M)
     # shape should be [n_snp, 1]
@@ -92,7 +92,13 @@ function ld_score_regression(
                 append!(x1, x[i])
             end
         end
+        yp1, w1, N1, initial_w1 = map(
+            (x) -> reshape(x[step1_ii], (n1, 1)), (yp, w, N, initial_w)
+        )
+    end
 
     # TODO finish implementing this function
-    end
+
+
+    return reg
 end
