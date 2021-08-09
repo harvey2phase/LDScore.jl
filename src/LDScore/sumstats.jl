@@ -61,7 +61,7 @@ function _load_testset_1(args)
     df_ref_id = DataFrames.DataFrame(CSV.File(args["ref_id"] * ".l2.ldscore"))
     df_h2 = DataFrames.DataFrame(CSV.File(args["h2"]))
 
-    M_annot = [[155881.2526]]
+    M_annot = reshape([[155881.2526]], (1, 1))
     w_ld_cname = "CHR"
     ref_ld_cnames = ["LD_0"]
     sumstats = DataFrames.innerjoin(df_ref_id, df_h2, on = "SNP")
@@ -83,7 +83,8 @@ function estimate_h2(args::Dict)
         M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols,
     ) = _read_ld_sumstats(args)
 
-    ref_ld = (sumstats[!, "LD"])
+    ref_ld = sumstats[!, "LD"]
+    ref_ld = reshape(ref_ld, (size(ref_ld)[1], 1))
     n_snp = size(sumstats)[1]
     test_print("n_snp", n_snp)
     n_blocks = min(n_snp, args["n_blocks"])
