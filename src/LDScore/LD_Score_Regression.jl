@@ -49,7 +49,7 @@ function ld_score_regression(
     reg::LD_Score_Regression,
     y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
 )
-    n_snp, reg.n_annot = size(x)
+    n_snp, reg.n_annot = size(x) # TODO fix this
 
     M_tot = sum(M)
     # shape should be [n_snp, 1]
@@ -92,7 +92,13 @@ function ld_score_regression(
                 append!(x1, x[i])
             end
         end
+        yp1, w1, N1, initial_w1 = map(
+            (x) -> reshape(x[step1_ii], (n1, 1)), (yp, w, N, initial_w)
+        )
+    end
 
     # TODO finish implementing this function
-    end
+
+
+    return reg
 end

@@ -30,7 +30,10 @@ mutable struct Hsq <: LD_Score_Regression
         hsq = new(
             y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights, 1,
         )
-        return hsq
+        return ld_score_regression(
+            hsq,
+            y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
+        )
     end
 end
 
