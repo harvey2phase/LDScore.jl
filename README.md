@@ -17,8 +17,6 @@ LDSC implementation based on (1) implemented in Julia.
 	- Lots of error checks missing
 - Build struct `Gencov` the same way `Hsq` is built to reuse abstract type `LD_Score_Regression` functions
 
-*Note.* Ignore files that start with `Fake` or `fake`.
-
 ## Estimating SNP-hertiability from summary statistics
 To estimate SNP-heritability, we need three sources of data:
 1. Summary statistics from a GWAS.
