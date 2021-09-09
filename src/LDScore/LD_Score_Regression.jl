@@ -69,7 +69,7 @@ function ld_score_regression(
         x, x_tot = append_intercept(x), append_intercept(x_tot)
         yp = y
     else
-        yp = y - intercept
+        yp = y .- intercept
         intercept_se = "NA"
     end
 
