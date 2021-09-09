@@ -9,7 +9,7 @@ using Main
 using Main.LDScoreJulia
 using Test
 
-eps = 1.0e-6
+eps = 1.0e-6 # accuracy of approximatly equal; the lower the more accurate
 
 approx(x, y, eps) = abs(x - y) <= eps
 
