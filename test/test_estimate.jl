@@ -1,5 +1,5 @@
 """
-Tests for `estimate_h2`.
+Tests for the function `estimate_h2`.
 Tests all fail because `ld_score_regression` is only half-implemented.
 """
 
@@ -26,10 +26,10 @@ end
 # Test case from original ldsc repo
 x = LDScoreJulia.estimate_h2(
     Dict([
-        ("ref_id", "LDScoreJulia/test/test_ldscore/oneld_onefile"),
-        ("w_ld", "LDScoreJulia/test/test_ldscore/w"),
-        ("h2", "LDScoreJulia/test/test_sumstats/1"),
-        ("out", "LDScoreJulia/test/test_out/1"),
+        ("ref_id", "test/test_ldscore/oneld_onefile"),
+        ("w_ld", "test/test_ldscore/w"),
+        ("h2", "test/test_sumstats/1"),
+        ("out", "test/test_out/1"),
 
         # default parser arguments
         ("n_blocks", 200),

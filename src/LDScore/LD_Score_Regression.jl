@@ -82,7 +82,7 @@ function ld_score_regression(
         throw(ErrorException(
             "twostep not compatible with partitioned LD Score yet."
         ))
-    elseif !(step1_ii == nothing)
+    elseif step1_ii != nothing
         n1 = sum(step1_ii)
         reg.twostep_filtered = n_snp - n1
         s = dropdims(step1_ii; dims=2)
@@ -101,4 +101,4 @@ function ld_score_regression(
 
 
     return reg
-end
+end # ld_score_regression

@@ -3,6 +3,13 @@ using DataFrames
 
 include("parse.jl")
 
+function test_print(name, value)
+    println("=================================================================")
+    println(name)
+    println(value)
+    println("-----------------------------------------------------------------")
+end # test_print
+
 
 # TODO
 function _read_M(args, n_annot) end
@@ -86,7 +93,6 @@ function estimate_h2(args::Dict)
     ref_ld = sumstats[!, "LD"]
     ref_ld = reshape(ref_ld, (size(ref_ld)[1], 1))
     n_snp = size(sumstats)[1]
-    test_print("n_snp", n_snp)
     n_blocks = min(n_snp, args["n_blocks"])
     n_annot = size(ref_ld_cnames)[1]
     χ²_max = args["χ²_max"]

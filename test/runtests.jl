@@ -9,6 +9,8 @@ using Main
 using Main.LDScoreJulia
 using Test
 
+eps = 1.0e-6
+
 approx(x, y, eps) = abs(x - y) <= eps
 
 function vector_approx(x, y, eps)
@@ -60,8 +62,6 @@ end
 
 
 @testset "Hsq functions" begin
-    eps = 1.0e-6
-
     χ² = ones((4, 1)) .* 4
     ld = ones((4, 1))
     w_ld = ones((4, 1))
@@ -78,14 +78,14 @@ end
 
     @testset "weights" begin
         x = [[0.09570313] [0.09570313] [0.09570313] [0.09570313]]'
-        a = hsq_weights(ld, w_ld, N, M, 1)
-        b = hsq_weights(ld, w_ld, N, M, 2)
+        a = LDScoreJulia.hsq_weights(ld, w_ld, N, M, 1)
+        b = LDScoreJulia.hsq_weights(ld, w_ld, N, M, 2)
         @test vector_approx(a, x, eps)
         @test vector_approx(a, b, eps)
 
         x = [[0.5] [0.5] [0.5] [0.5]]'
-        a = hsq_weights(ld, w_ld, N, M, 0)
-        b = hsq_weights(ld, w_ld, N, M, -1)
+        a = LDScoreJulia.hsq_weights(ld, w_ld, N, M, 0)
+        b = LDScoreJulia.hsq_weights(ld, w_ld, N, M, -1)
         @test vector_approx(a, x, eps)
         @test vector_approx(a, b, eps)
     end
@@ -95,9 +95,9 @@ end
         ld = ones((10, 1)) .* 100
         N = ones((10, 1)) .* 100000
         M = 1e7
-        agg = aggregate(hsq, χ², ld, N, M)
+        agg = LDScoreJulia.aggregate(hsq, χ², ld, N, M)
         approx(agg, 0.5, eps)
-        agg = aggregate(hsq, χ², ld, N, M; intercept=1.5)
+        agg = LDScoreJulia.aggregate(hsq, χ², ld, N, M; intercept=1.5)
         approx(agg, 0, eps)
     end
 end
