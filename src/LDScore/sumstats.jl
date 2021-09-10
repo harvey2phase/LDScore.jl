@@ -53,10 +53,10 @@ function _read_sumstats(args, fh; alleles=false, dropna=false)
 end
 
 
-function _read_ref_ld(args)
+function _read_ref_ld()
     # Read reference LD Scores
     ref_ld = _read_chr_split_files(
-        args["ref_ld_chr"], args["ref_ld"],
+        LDScoreJulia.args["ref-ld-chr"], LDScoreJulia.args["ref-ld"],
         "reference panel LD Score", ldscore_fromlist,
     )
     @info "Num. of SNPs read for reference panel LD Scores:" size(ref_ld)
@@ -64,9 +64,9 @@ function _read_ref_ld(args)
 end
 
 
-function _load_testset_1(args)
-    df_ref_id = DataFrames.DataFrame(CSV.File(args["ref-ld"] * ".l2.ldscore"))
-    df_h2 = DataFrames.DataFrame(CSV.File(args["h²"]))
+function _load_testset_1()
+    df_ref_id = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["ref-ld"] * ".l2.ldscore"))
+    df_h2 = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["h²"]))
 
     M_annot = reshape([[155881.2526]], (1, 1))
     w_ld_cname = "CHR"
@@ -79,8 +79,8 @@ end
 
 # TODO: Just loading testing set now, need to actually implement to load
 #       generic datasets
-function _read_ld_sumstats(args; alleles=false, dropna=true)
-    return _load_testset_1(args)
+function _read_ld_sumstats(alleles=false, dropna=true)
+    return _load_testset_1()
 end
 
 
@@ -88,7 +88,7 @@ end
 function estimate_h2()
     (
         M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols,
-    ) = _read_ld_sumstats(LDScoreJulia.args)
+    ) = _read_ld_sumstats()
 
     ref_ld = sumstats[!, "LD"]
     ref_ld = reshape(ref_ld, (size(ref_ld)[1], 1))
