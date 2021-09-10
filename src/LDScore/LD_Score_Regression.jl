@@ -78,7 +78,7 @@ function ld_score_regression(
         throw(ErrorException(
             "twostep is not compatible with constrain_intercept."
         ))
-    elseif !(step1_ii == nothing) && reg.n_annot > 1
+    elseif step1_ii != nothing && reg.n_annot > 1
         throw(ErrorException(
             "twostep not compatible with partitioned LD Score yet."
         ))
