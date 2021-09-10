@@ -6,11 +6,11 @@ parser = ArgParseSettings()
         arg_type = Float64
         help = """Test statistic bound for use with the two-step estimator.
             Not compatible with --no-intercept and --constrain-intercept."""
-    "--h2"
+    "--h²"
         arg_type = String
         help = """Filename for a .sumstats[.gz] file for one-phenotype LD Score regression.
             --h2 requires at minimum also setting the --ref-ld and --w-ld flags."""
-    "--h2-cts"
+    "--h²-cts"
         arg_type = String
         help = """Filename for a .sumstats[.gz] file for cell-type-specific analysis.
             --h2-cts requires the --ref-ld-chr, --w-ld, and --ref-ld-chr-cts flags."""
