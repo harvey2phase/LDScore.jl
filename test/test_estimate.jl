@@ -23,21 +23,13 @@ function vector_approx(x, y, eps)
     return true
 end
 
-# Test case from original ldsc repo
-x = LDScoreJulia.estimate_h2(
-    Dict([
-        ("ref_id", "test/test_ldscore/oneld_onefile"),
-        ("w_ld", "test/test_ldscore/w"),
-        ("h2", "test/test_sumstats/1"),
-        ("out", "test/test_out/1"),
+print(LDScoreJulia.args)
+LDScoreJulia.args["ref-ld"] = "test/test_ldscore/oneld_onefile"
+LDScoreJulia.args["w-ld"] = "test/test_ldscore/w"
+LDScoreJulia.args["h²"] = "test/test_sumstats/1"
+LDScoreJulia.args["out"] = "test/test_out/1"
 
-        # default parser arguments
-        ("n_blocks", 200),
-        ("χ²_max", nothing),
-        ("two_step", nothing),
-        ("intercept_h2", nothing),
-        ("overlap_annot", false),
-    ])
-)
+# Test case from original ldsc repo
+x = LDScoreJulia.estimate_h2()
 
 # TODO finish implementing `ld_score_regression`

@@ -17,6 +17,13 @@ Example:
 See `Hsq.jl` for a case study example.
 """
 
+function test_print(name, value)
+    println("=================================================================")
+    println(name)
+    println(value)
+    println("-----------------------------------------------------------------")
+end # test_print
+
 abstract type LD_Score_Regression end
 
 # TODO need to find jackknife library or implement it
@@ -78,11 +85,12 @@ function ld_score_regression(
         throw(ErrorException(
             "twostep is not compatible with constrain_intercept."
         ))
-    elseif !(step1_ii == nothing) && reg.n_annot > 1
+    elseif step1_ii != nothing && reg.n_annot > 1
         throw(ErrorException(
             "twostep not compatible with partitioned LD Score yet."
         ))
     elseif step1_ii != nothing
+        test_print("step1_ii", step1_ii)
         n1 = sum(step1_ii)
         reg.twostep_filtered = n_snp - n1
         s = dropdims(step1_ii; dims=2)

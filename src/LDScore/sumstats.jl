@@ -65,8 +65,8 @@ end
 
 
 function _load_testset_1(args)
-    df_ref_id = DataFrames.DataFrame(CSV.File(args["ref_id"] * ".l2.ldscore"))
-    df_h2 = DataFrames.DataFrame(CSV.File(args["h2"]))
+    df_ref_id = DataFrames.DataFrame(CSV.File(args["ref-ld"] * ".l2.ldscore"))
+    df_h2 = DataFrames.DataFrame(CSV.File(args["h²"]))
 
     M_annot = reshape([[155881.2526]], (1, 1))
     w_ld_cname = "CHR"
@@ -85,26 +85,26 @@ end
 
 
 # TODO: Needs more error-checking
-function estimate_h2(args::Dict)
+function estimate_h2()
     (
         M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols,
-    ) = _read_ld_sumstats(args)
+    ) = _read_ld_sumstats(LDScoreJulia.args)
 
     ref_ld = sumstats[!, "LD"]
     ref_ld = reshape(ref_ld, (size(ref_ld)[1], 1))
     n_snp = size(sumstats)[1]
-    n_blocks = min(n_snp, args["n_blocks"])
+    n_blocks = min(n_snp, LDScoreJulia.args["n-blocks"])
     n_annot = size(ref_ld_cnames)[1]
-    χ²_max = args["χ²_max"]
+    χ²_max = LDScoreJulia.args["χ²-max"]
     old_weights = false
 
     if n_annot == 1
-        if args["two_step"] == nothing && args["intercept_h2"] == nothing
-            args["two_step"] = 30
+        if LDScoreJulia.args["two-step"] == nothing && LDScoreJulia.args["intercept-h²"] == nothing
+            LDScoreJulia.args["two-step"] = 30
         end
     else
         old_weights = true
-        if args["χ²_max"] == nothing
+        if LDScoreJulia.args["χ²-max"] == nothing
             χ²_max = max(0.001 * max(sumstats[!, "N"]), 80)
         end
     end
@@ -123,18 +123,18 @@ function estimate_h2(args::Dict)
 
     ĥ² = Hsq(
         χ², ref_ld, s(sumstats[!, w_ld_cname]), s(sumstats[!, "N"]), M_annot,
-        n_blocks, args["intercept_h2"], false, args["two_step"], old_weights,
+        n_blocks, LDScoreJulia.args["intercept-h²"], false, LDScoreJulia.args["two-step"], old_weights,
     )
 
-    if args["overlap_annot"]
-        overlap_matrix, M_tot = _read_annot(args)
+    if LDScoreJulia.args["overlap_annot"]
+        overlap_matrix, M_tot = _read_annot(LDScoreJulia.args)
 
         df_results = ĥ²._overlap_output(
             ref_ld_cnames, overlap_matrix, M_annot, M_tot,
-            args["print_coefficients"],
+            LDScoreJulia.args["print_coefficients"],
         )
-        df_results.to_csv(args["out"]+".results", sep="\t", index=False)
+        df_results.to_csv(LDScoreJulia.args["out"]+".results", sep="\t", index=False)
     end
 
     return ĥ²
-end
+end # estimate_h2
