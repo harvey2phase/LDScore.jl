@@ -26,7 +26,7 @@ print(args["two-step"])
 "--keep", type = str,
     help = "File with individuals to include in LD Score estimation. "
     "The file should contain one individual ID per row.")
-"--ld-wind-snps", type = int,
+"--ld-wind-snps", type = Int32,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "# of SNPs. You can only specify one --ld-wind-* option.")
 "--ld-wind-kb", type = float,
@@ -143,7 +143,7 @@ print(args["two-step"])
     "The delete-values are formatted as a matrix with (# of jackknife blocks) rows and "
     "(# of LD Scores) columns.")
 # Flags you should almost never use
-"--chunk-size", default = 50, type = int,
+"--chunk-size", default = 50, type = Int32,
     help = "Chunk size for LD Score calculation. Use the default.")
 "--pickle", default = False, action = "store_true",
     help = "Store .l2.ldscore files as pickles instead of gzipped tab-delimited text.")
@@ -151,7 +151,7 @@ print(args["two-step"])
     help = "Yes, I really want to compute whole-chromosome LD Score.")
 "--invert-anyway", default = False, action = "store_true",
     help = "Force LDSC to attempt to invert ill-conditioned matrices.")
-"--n-blocks", default = 200, type = int,
+"--n-blocks", default = 200, type = Int32,
     help = "Number of block jackknife blocks.")
 "--not-M-5-50", default = False, action = "store_true",
     help = "This flag tells LDSC to use the .l2.M file instead of the .l2.M_5_50 file.")
