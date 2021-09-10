@@ -21,6 +21,21 @@ parser = ArgParseSettings()
         arg_type = String
         help = """Use --ref-ld to tell LDSC which LD Scores to use as the predictors in the LD Score regression.
             LDSC will automatically append .l2.ldscore/.l2.ldscore.gz to the filename prefix."""
+    "--n-blocks"
+        default = 200
+        arg_type = Int64
+        help = "Number of block jackknife blocks."
+    "--χ²-max"
+        arg_type = Float64
+        help = "Max χ²."
+    "--intercept-h²"
+        help = "Intercepts for constrained-intercept single-trait LD Score regression."
+    "--overlap-annot"
+        default = false
+        action = "store_true"
+        help = """This flag informs LDSC that the partitioned LD Scores were generates using an
+            annot matrix with overlapping categories (i.e., not all row sums equal 1),
+            and prevents LDSC from displaying output that is meaningless with overlapping categories."""
 end # add_arg_table parser
 args = parse_args(ARGS, parser)
 
@@ -111,10 +126,6 @@ print(args["two-step"])
 "--w-ld-chr", arg_type = String,
     help = "Same as --w-ld, but will read files split into 22 chromosomes in the same "
     "manner as --ref-ld-chr.")
-"--overlap-annot", default = False, action = "store_true",
-    help = "This flag informs LDSC that the partitioned LD Scores were generates using an "
-    "annot matrix with overlapping categories (i.e., not all row sums equal 1), "
-    "and prevents LDSC from displaying output that is meaningless with overlapping categories.")
 "--print-coefficients",default = False,action = "store_true",
     help = "when categories are overlapping, print coefficients as well as heritabilities.")
 "--frqfile", arg_type = String,
@@ -126,15 +137,11 @@ print(args["two-step"])
     help = "If used with --h2, this constrains the LD Score regression intercept to equal "
     "1. If used with --rg, this constrains the LD Score regression intercepts for the h2 "
     "estimates to be one and the intercept for the genetic covariance estimate to be zero.")
-"--intercept-h2", action = "store", default = None,
-    help = "Intercepts for constrained-intercept single-trait LD Score regression.")
 "--intercept-gencov", action = "store", default = None,
     help = "Intercepts for constrained-intercept cross-trait LD Score regression."
     " Must have same length as --rg. The first entry is ignored.")
 "--M", arg_type = String,
     help = "# of SNPs (if you don\"t want to use the .l2.M files that came with your .l2.ldscore.gz files)")
-"--chisq-max", arg_type = Float64,
-    help = "Max chi^2.")
 "--ref-ld-chr-cts", arg_type = String,
     help = "Name of a file that has a list of file name prefixes for cell-type-specific analysis.")
 "--print-all-cts", action = "store_true", default = False)
@@ -157,8 +164,6 @@ print(args["two-step"])
     help = "Yes, I really want to compute whole-chromosome LD Score.")
 "--invert-anyway", default = False, action = "store_true",
     help = "Force LDSC to attempt to invert ill-conditioned matrices.")
-"--n-blocks", default = 200, arg_type = Int32,
-    help = "Number of block jackknife blocks.")
 "--not-M-5-50", default = False, action = "store_true",
     help = "This flag tells LDSC to use the .l2.M file instead of the .l2.M_5_50 file.")
 "--return-silly-things", default = False, action = "store_true",
