@@ -15,51 +15,51 @@ print(args["two-step"])
     help = "Output filename prefix. If --out is not set, LDSC will use ldsc as the "
     "defualt output filename prefix.")
 # Basic LD Score Estimation Flags"
-"--bfile", default = None, type = str,
+"--bfile", type = str,
     help = "Prefix for Plink .bed/.bim/.fam file")
 "--l2", default = False, action = "store_true",
     help = "Estimate l2. Compatible with both jackknife and non-jackknife.")
 # Filtering / Data Management for LD Score
-"--extract", default = None, type = str,
+"--extract", type = str,
     help = "File with SNPs to include in LD Score estimation. "
     "The file should contain one SNP ID per row.")
-"--keep", default = None, type = str,
+"--keep", type = str,
     help = "File with individuals to include in LD Score estimation. "
     "The file should contain one individual ID per row.")
-"--ld-wind-snps", default = None, type = int,
+"--ld-wind-snps", type = int,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "# of SNPs. You can only specify one --ld-wind-* option.")
-"--ld-wind-kb", default = None, type = float,
+"--ld-wind-kb", type = float,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "kilobase-pairs (kb). You can only specify one --ld-wind-* option.")
-"--ld-wind-cm", default = None, type = float,
+"--ld-wind-cm", type = float,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "centiMorgans (cM). You can only specify one --ld-wind-* option.")
-"--print-snps", default = None, type = str,
+"--print-snps", type = str,
     help = "This flag tells LDSC to only print LD Scores for the SNPs listed "
     "(one ID per row) in PRINT_SNPS. The sum r^2 will still include SNPs not in "
     "PRINT_SNPs. This is useful for reducing the number of LD Scores that have to be "
     "read into memory when estimating h2 or rg." )
 # Fancy LD Score Estimation Flags
-"--annot", default = None, type = str,
+"--annot", type = str,
     help = "Filename prefix for annotation file for partitioned LD Score estimation. "
     "LDSC will automatically append .annot or .annot.gz to the filename prefix. "
     "See docs/file_formats_ld for a definition of the .annot format.")
 "--thin-annot", action = "store_true", default = False,
     help = "This flag says your annot files have only annotations, with no SNP, CM, CHR, BP columns.")
-"--cts-bin", default = None, type = str,
+"--cts-bin", type = str,
     help = "This flag tells LDSC to compute partitioned LD Scores, where the partition "
     "is defined by cutting one or several continuous variable[s] into bins. "
     "The argument to this flag should be the name of a single file or a comma-separated "
     "list of files. The file format is two columns, with SNP IDs in the first column "
     "and the continuous variable in the second column. ")
-"--cts-breaks", default = None, type = str,
+"--cts-breaks", type = str,
     help = "Use this flag to specify names for the continuous variables cut into bins "
     "with --cts-bin. For each continuous variable, specify breaks as a comma-separated "
     "list of breakpoints, and separate the breakpoints for each variable with an x. "
     "For example, if binning on MAF and distance to gene (in kb), "
     "you might set --cts-breaks 0.1,0.25,0.4x10,100,1000 ")
-"--cts-names", default = None, type = str,
+"--cts-names", type = str,
     help = "Use this flag to specify names for the continuous variables cut into bins "
     "with --cts-bin. The argument to this flag should be a comma-separated list of "
     "names. For example, if binning on DAF and distance to gene, you might set "
@@ -68,7 +68,7 @@ print(args["two-step"])
     help = "Setting this flag causes LDSC to compute per-allele LD Scores, "
     "i.e., \ell_j : =  \sum_k p_k(1-p_k)r^2_{jk}, where p_k denotes the MAF "
     "of SNP j. ")
-"--pq-exp", default = None, type = float,
+"--pq-exp", type = float,
     help = "Setting this flag causes LDSC to compute LD Scores with the given scale factor, "
     "i.e., \ell_j : =  \sum_k (p_k(1-p_k))^a r^2_{jk}, where p_k denotes the MAF "
     "of SNP j and a is the argument to --pq-exp. ")
@@ -76,22 +76,22 @@ print(args["two-step"])
     help = "By defualt, seting --cts-bin or --cts-bin-add causes LDSC to print "
     "the resulting annot matrix. Setting --no-print-annot tells LDSC not "
     "to print the annot matrix. ")
-"--maf", default = None, type = float,
+"--maf", type = float,
     help = "Minor allele frequency lower bound. Default is MAF > 0.")
 # Basic Flags for Working with Variance Components
-"--h2", default = None, type = str,
+"--h2", type = str,
     help = "Filename for a .sumstats[.gz] file for one-phenotype LD Score regression. "
     "--h2 requires at minimum also setting the --ref-ld and --w-ld flags.")
-"--h2-cts", default = None, type = str,
+"--h2-cts", type = str,
     help = "Filename for a .sumstats[.gz] file for cell-type-specific analysis. "
     "--h2-cts requires the --ref-ld-chr, --w-ld, and --ref-ld-chr-cts flags.")
-"--rg", default = None, type = str,
+"--rg", type = str,
     help = "Comma-separated list of prefixes of .chisq filed for genetic correlation estimation.")
-"--ref-ld", default = None, type = str,
+"--ref-ld", type = str,
     help = "Use --ref-ld to tell LDSC which LD Scores to use as the predictors in the LD "
     "Score regression. "
     "LDSC will automatically append .l2.ldscore/.l2.ldscore.gz to the filename prefix.")
-"--ref-ld-chr", default = None, type = str,
+"--ref-ld-chr", type = str,
     help = "Same as --ref-ld, but will automatically concatenate .l2.ldscore files split "
     "across 22 chromosomes. LDSC will automatically append .l2.ldscore/.l2.ldscore.gz "
     "to the filename prefix. If the filename prefix contains the symbol @, LDSC will "
@@ -99,10 +99,10 @@ print(args["two-step"])
     "numbers to the end of the filename prefix."
     "Example 1: --ref-ld-chr ld/ will read ld/1.l2.ldscore.gz ... ld/22.l2.ldscore.gz"
     "Example 2: --ref-ld-chr ld/@_kg will read ld/1_kg.l2.ldscore.gz ... ld/22_kg.l2.ldscore.gz")
-"--w-ld", default = None, type = str,
+"--w-ld", type = str,
     help = "Filename prefix for file with LD Scores with sum r^2 taken over SNPs included "
     "in the regression. LDSC will automatically append .l2.ldscore/.l2.ldscore.gz.")
-"--w-ld-chr", default = None, type = str,
+"--w-ld-chr", type = str,
     help = "Same as --w-ld, but will read files split into 22 chromosomes in the same "
     "manner as --ref-ld-chr.")
 "--overlap-annot", default = False, action = "store_true",
@@ -125,11 +125,11 @@ print(args["two-step"])
 "--intercept-gencov", action = "store", default = None,
     help = "Intercepts for constrained-intercept cross-trait LD Score regression."
     " Must have same length as --rg. The first entry is ignored.")
-"--M", default = None, type = str,
+"--M", type = str,
     help = "# of SNPs (if you don\"t want to use the .l2.M files that came with your .l2.ldscore.gz files)")
-"--chisq-max", default = None, type = float,
+"--chisq-max", type = float,
     help = "Max chi^2.")
-"--ref-ld-chr-cts", default = None, type = str,
+"--ref-ld-chr-cts", type = str,
     help = "Name of a file that has a list of file name prefixes for cell-type-specific analysis.")
 "--print-all-cts", action = "store_true", default = False)
 
