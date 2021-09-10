@@ -1,24 +1,26 @@
 using ArgParse
 
 parser = ArgParseSettings()
-
 @add_arg_table! parser begin
     "--two-step"
         arg_type = Float64
-        help = "Test statistic bound for use with the two-step estimator. Not compatible with --no-intercept and --constrain-intercept."
-    "--h2", arg_type = str,
-        help = "Filename for a .sumstats[.gz] file for one-phenotype LD Score regression. "
-        "--h2 requires at minimum also setting the --ref-ld and --w-ld flags.")
-    "--h2-cts", arg_type = str,
-        help = "Filename for a .sumstats[.gz] file for cell-type-specific analysis. "
-        "--h2-cts requires the --ref-ld-chr, --w-ld, and --ref-ld-chr-cts flags.")
-    "--rg", arg_type = str,
-        help = "Comma-separated list of prefixes of .chisq filed for genetic correlation estimation.")
-    "--ref-ld", arg_type = str,
-        help = "Use --ref-ld to tell LDSC which LD Scores to use as the predictors in the LD "
-        "Score regression. "
-        "LDSC will automatically append .l2.ldscore/.l2.ldscore.gz to the filename prefix.")
-
+        help = """Test statistic bound for use with the two-step estimator.
+            Not compatible with --no-intercept and --constrain-intercept."""
+    "--h2"
+        arg_type = String
+        help = """Filename for a .sumstats[.gz] file for one-phenotype LD Score regression.
+            --h2 requires at minimum also setting the --ref-ld and --w-ld flags."""
+    "--h2-cts"
+        arg_type = String
+        help = """Filename for a .sumstats[.gz] file for cell-type-specific analysis.
+            --h2-cts requires the --ref-ld-chr, --w-ld, and --ref-ld-chr-cts flags."""
+    "--rg"
+        arg_type = String
+        help = "Comma-separated list of prefixes of .chisq filed for genetic correlation estimation."
+    "--ref-ld"
+        arg_type = String
+        help = """Use --ref-ld to tell LDSC which LD Scores to use as the predictors in the LD Score regression.
+            LDSC will automatically append .l2.ldscore/.l2.ldscore.gz to the filename prefix."""
 end # add_arg_table parser
 args = parse_args(ARGS, parser)
 
@@ -27,19 +29,19 @@ print(args["two-step"])
 =#
 
 #= TODO arguments to be implemented
-"--out", default = "ldsc", arg_type = str,
+"--out", default = "ldsc", arg_type = String,
     help = "Output filename prefix. If --out is not set, LDSC will use ldsc as the "
     "defualt output filename prefix.")
 # Basic LD Score Estimation Flags"
-"--bfile", arg_type = str,
+"--bfile", arg_type = String,
     help = "Prefix for Plink .bed/.bim/.fam file")
 "--l2", default = False, action = "store_true",
     help = "Estimate l2. Compatible with both jackknife and non-jackknife.")
 # Filtering / Data Management for LD Score
-"--extract", arg_type = str,
+"--extract", arg_type = String,
     help = "File with SNPs to include in LD Score estimation. "
     "The file should contain one SNP ID per row.")
-"--keep", arg_type = str,
+"--keep", arg_type = String,
     help = "File with individuals to include in LD Score estimation. "
     "The file should contain one individual ID per row.")
 "--ld-wind-snps", arg_type = Int32,
@@ -51,31 +53,31 @@ print(args["two-step"])
 "--ld-wind-cm", arg_type = Float64,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "centiMorgans (cM). You can only specify one --ld-wind-* option.")
-"--print-snps", arg_type = str,
+"--print-snps", arg_type = String,
     help = "This flag tells LDSC to only print LD Scores for the SNPs listed "
     "(one ID per row) in PRINT_SNPS. The sum r^2 will still include SNPs not in "
     "PRINT_SNPs. This is useful for reducing the number of LD Scores that have to be "
     "read into memory when estimating h2 or rg." )
 # Fancy LD Score Estimation Flags
-"--annot", arg_type = str,
+"--annot", arg_type = String,
     help = "Filename prefix for annotation file for partitioned LD Score estimation. "
     "LDSC will automatically append .annot or .annot.gz to the filename prefix. "
     "See docs/file_formats_ld for a definition of the .annot format.")
 "--thin-annot", action = "store_true", default = False,
     help = "This flag says your annot files have only annotations, with no SNP, CM, CHR, BP columns.")
-"--cts-bin", arg_type = str,
+"--cts-bin", arg_type = String,
     help = "This flag tells LDSC to compute partitioned LD Scores, where the partition "
     "is defined by cutting one or several continuous variable[s] into bins. "
     "The argument to this flag should be the name of a single file or a comma-separated "
     "list of files. The file format is two columns, with SNP IDs in the first column "
     "and the continuous variable in the second column. ")
-"--cts-breaks", arg_type = str,
+"--cts-breaks", arg_type = String,
     help = "Use this flag to specify names for the continuous variables cut into bins "
     "with --cts-bin. For each continuous variable, specify breaks as a comma-separated "
     "list of breakpoints, and separate the breakpoints for each variable with an x. "
     "For example, if binning on MAF and distance to gene (in kb), "
     "you might set --cts-breaks 0.1,0.25,0.4x10,100,1000 ")
-"--cts-names", arg_type = str,
+"--cts-names", arg_type = String,
     help = "Use this flag to specify names for the continuous variables cut into bins "
     "with --cts-bin. The argument to this flag should be a comma-separated list of "
     "names. For example, if binning on DAF and distance to gene, you might set "
@@ -95,7 +97,7 @@ print(args["two-step"])
 "--maf", arg_type = Float64,
     help = "Minor allele frequency lower bound. Default is MAF > 0.")
 # Basic Flags for Working with Variance Components
-"--ref-ld-chr", arg_type = str,
+"--ref-ld-chr", arg_type = String,
     help = "Same as --ref-ld, but will automatically concatenate .l2.ldscore files split "
     "across 22 chromosomes. LDSC will automatically append .l2.ldscore/.l2.ldscore.gz "
     "to the filename prefix. If the filename prefix contains the symbol @, LDSC will "
@@ -103,10 +105,10 @@ print(args["two-step"])
     "numbers to the end of the filename prefix."
     "Example 1: --ref-ld-chr ld/ will read ld/1.l2.ldscore.gz ... ld/22.l2.ldscore.gz"
     "Example 2: --ref-ld-chr ld/@_kg will read ld/1_kg.l2.ldscore.gz ... ld/22_kg.l2.ldscore.gz")
-"--w-ld", arg_type = str,
+"--w-ld", arg_type = String,
     help = "Filename prefix for file with LD Scores with sum r^2 taken over SNPs included "
     "in the regression. LDSC will automatically append .l2.ldscore/.l2.ldscore.gz.")
-"--w-ld-chr", arg_type = str,
+"--w-ld-chr", arg_type = String,
     help = "Same as --w-ld, but will read files split into 22 chromosomes in the same "
     "manner as --ref-ld-chr.")
 "--overlap-annot", default = False, action = "store_true",
@@ -115,10 +117,10 @@ print(args["two-step"])
     "and prevents LDSC from displaying output that is meaningless with overlapping categories.")
 "--print-coefficients",default = False,action = "store_true",
     help = "when categories are overlapping, print coefficients as well as heritabilities.")
-"--frqfile", arg_type = str,
+"--frqfile", arg_type = String,
     help = "For use with --overlap-annot. Provides allele frequencies to prune to common "
     "snps if --not-M-5-50 is not set.")
-"--frqfile-chr", arg_type = str,
+"--frqfile-chr", arg_type = String,
     help = "Prefix for --frqfile files split over chromosome.")
 "--no-intercept", action = "store_true",
     help = "If used with --h2, this constrains the LD Score regression intercept to equal "
@@ -129,11 +131,11 @@ print(args["two-step"])
 "--intercept-gencov", action = "store", default = None,
     help = "Intercepts for constrained-intercept cross-trait LD Score regression."
     " Must have same length as --rg. The first entry is ignored.")
-"--M", arg_type = str,
+"--M", arg_type = String,
     help = "# of SNPs (if you don\"t want to use the .l2.M files that came with your .l2.ldscore.gz files)")
 "--chisq-max", arg_type = Float64,
     help = "Max chi^2.")
-"--ref-ld-chr-cts", arg_type = str,
+"--ref-ld-chr-cts", arg_type = String,
     help = "Name of a file that has a list of file name prefixes for cell-type-specific analysis.")
 "--print-all-cts", action = "store_true", default = False)
 
@@ -185,7 +187,7 @@ if __name__  =  =  "__main__":
         header = MASTHEAD
         header + =  "Call: \n"
         header + =  "./ldsc.py \\\n"
-        options = ["--"+x.replace("_","-")+" "+str(opts[x])+" \\" for x in non_defaults]
+        options = ["--"+x.replace("_","-")+" "+String(opts[x])+" \\" for x in non_defaults]
         header + =  "\n".join(options).replace("True","").replace("False","")
         header = header[0:-1]+"\n"
         log.log(header)
