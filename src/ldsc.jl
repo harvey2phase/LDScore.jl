@@ -29,10 +29,10 @@ print(args["two-step"])
 "--ld-wind-snps", type = Int32,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "# of SNPs. You can only specify one --ld-wind-* option.")
-"--ld-wind-kb", type = float,
+"--ld-wind-kb", type = Float64,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "kilobase-pairs (kb). You can only specify one --ld-wind-* option.")
-"--ld-wind-cm", type = float,
+"--ld-wind-cm", type = Float64,
     help = "Specify the window size to be used for estimating LD Scores in units of "
     "centiMorgans (cM). You can only specify one --ld-wind-* option.")
 "--print-snps", type = str,
@@ -68,7 +68,7 @@ print(args["two-step"])
     help = "Setting this flag causes LDSC to compute per-allele LD Scores, "
     "i.e., \ell_j : =  \sum_k p_k(1-p_k)r^2_{jk}, where p_k denotes the MAF "
     "of SNP j. ")
-"--pq-exp", type = float,
+"--pq-exp", type = Float64,
     help = "Setting this flag causes LDSC to compute LD Scores with the given scale factor, "
     "i.e., \ell_j : =  \sum_k (p_k(1-p_k))^a r^2_{jk}, where p_k denotes the MAF "
     "of SNP j and a is the argument to --pq-exp. ")
@@ -76,7 +76,7 @@ print(args["two-step"])
     help = "By defualt, seting --cts-bin or --cts-bin-add causes LDSC to print "
     "the resulting annot matrix. Setting --no-print-annot tells LDSC not "
     "to print the annot matrix. ")
-"--maf", type = float,
+"--maf", type = Float64,
     help = "Minor allele frequency lower bound. Default is MAF > 0.")
 # Basic Flags for Working with Variance Components
 "--h2", type = str,
@@ -127,7 +127,7 @@ print(args["two-step"])
     " Must have same length as --rg. The first entry is ignored.")
 "--M", type = str,
     help = "# of SNPs (if you don\"t want to use the .l2.M files that came with your .l2.ldscore.gz files)")
-"--chisq-max", type = float,
+"--chisq-max", type = Float64,
     help = "Max chi^2.")
 "--ref-ld-chr-cts", type = str,
     help = "Name of a file that has a list of file name prefixes for cell-type-specific analysis.")
