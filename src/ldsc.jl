@@ -50,7 +50,7 @@ print(args["two-step"])
 # Basic LD Score Estimation Flags"
 "--bfile", arg_type = String,
     help = "Prefix for Plink .bed/.bim/.fam file")
-"--l2", default = False, action = "store_true",
+"--l2", default = false, action = "store_true",
     help = "Estimate l2. Compatible with both jackknife and non-jackknife.")
 # Filtering / Data Management for LD Score
 "--extract", arg_type = String,
@@ -78,7 +78,7 @@ print(args["two-step"])
     help = "Filename prefix for annotation file for partitioned LD Score estimation. "
     "LDSC will automatically append .annot or .annot.gz to the filename prefix. "
     "See docs/file_formats_ld for a definition of the .annot format.")
-"--thin-annot", action = "store_true", default = False,
+"--thin-annot", action = "store_true", default = false,
     help = "This flag says your annot files have only annotations, with no SNP, CM, CHR, BP columns.")
 "--cts-bin", arg_type = String,
     help = "This flag tells LDSC to compute partitioned LD Scores, where the partition "
@@ -97,7 +97,7 @@ print(args["two-step"])
     "with --cts-bin. The argument to this flag should be a comma-separated list of "
     "names. For example, if binning on DAF and distance to gene, you might set "
     "--cts-bin DAF,DIST_TO_GENE ")
-"--per-allele", default = False, action = "store_true",
+"--per-allele", default = false, action = "store_true",
     help = "Setting this flag causes LDSC to compute per-allele LD Scores, "
     "i.e., \ell_j : =  \sum_k p_k(1-p_k)r^2_{jk}, where p_k denotes the MAF "
     "of SNP j. ")
@@ -105,7 +105,7 @@ print(args["two-step"])
     help = "Setting this flag causes LDSC to compute LD Scores with the given scale factor, "
     "i.e., \ell_j : =  \sum_k (p_k(1-p_k))^a r^2_{jk}, where p_k denotes the MAF "
     "of SNP j and a is the argument to --pq-exp. ")
-"--no-print-annot", default = False, action = "store_true",
+"--no-print-annot", default = false, action = "store_true",
     help = "By defualt, seting --cts-bin or --cts-bin-add causes LDSC to print "
     "the resulting annot matrix. Setting --no-print-annot tells LDSC not "
     "to print the annot matrix. ")
@@ -126,7 +126,7 @@ print(args["two-step"])
 "--w-ld-chr", arg_type = String,
     help = "Same as --w-ld, but will read files split into 22 chromosomes in the same "
     "manner as --ref-ld-chr.")
-"--print-coefficients",default = False,action = "store_true",
+"--print-coefficients",default = false,action = "store_true",
     help = "when categories are overlapping, print coefficients as well as heritabilities.")
 "--frqfile", arg_type = String,
     help = "For use with --overlap-annot. Provides allele frequencies to prune to common "
@@ -144,13 +144,13 @@ print(args["two-step"])
     help = "# of SNPs (if you don\"t want to use the .l2.M files that came with your .l2.ldscore.gz files)")
 "--ref-ld-chr-cts", arg_type = String,
     help = "Name of a file that has a list of file name prefixes for cell-type-specific analysis.")
-"--print-all-cts", action = "store_true", default = False)
+"--print-all-cts", action = "store_true", default = false)
 
 # Flags for both LD Score estimation and h2/gencor estimation
-"--print-cov", default = False, action = "store_true",
+"--print-cov", default = false, action = "store_true",
     help = "For use with --h2/--rg. This flag tells LDSC to print the "
     "covaraince matrix of the estimates.")
-"--print-delete-vals", default = False, action = "store_true",
+"--print-delete-vals", default = false, action = "store_true",
     help = "If this flag is set, LDSC will print the block jackknife delete-values ("
     "i.e., the regression coefficeints estimated from the data with a block removed). "
     "The delete-values are formatted as a matrix with (# of jackknife blocks) rows and "
@@ -158,17 +158,17 @@ print(args["two-step"])
 # Flags you should almost never use
 "--chunk-size", default = 50, arg_type = Int32,
     help = "Chunk size for LD Score calculation. Use the default.")
-"--pickle", default = False, action = "store_true",
+"--pickle", default = false, action = "store_true",
     help = "Store .l2.ldscore files as pickles instead of gzipped tab-delimited text.")
-"--yes-really", default = False, action = "store_true",
+"--yes-really", default = false, action = "store_true",
     help = "Yes, I really want to compute whole-chromosome LD Score.")
-"--invert-anyway", default = False, action = "store_true",
+"--invert-anyway", default = false, action = "store_true",
     help = "Force LDSC to attempt to invert ill-conditioned matrices.")
-"--not-M-5-50", default = False, action = "store_true",
+"--not-M-5-50", default = false, action = "store_true",
     help = "This flag tells LDSC to use the .l2.M file instead of the .l2.M_5_50 file.")
-"--return-silly-things", default = False, action = "store_true",
+"--return-silly-things", default = false, action = "store_true",
     help = "Force ldsc to return silly genetic correlation estimates.")
-"--no-check-alleles", default = False, action = "store_true",
+"--no-check-alleles", default = false, action = "store_true",
     help = "For rg estimation, skip checking whether the alleles match. This check is "
     "redundant for pairs of chisq files generated using munge_sumstats.py and the "
     "same argument to the --merge-alleles flag.")
@@ -193,7 +193,7 @@ if __name__  =  =  "__main__":
         header + =  "Call: \n"
         header + =  "./ldsc.py \\\n"
         options = ["--"+x.replace("_","-")+" "+String(opts[x])+" \\" for x in non_defaults]
-        header + =  "\n".join(options).replace("True","").replace("False","")
+        header + =  "\n".join(options).replace("true","").replace("false","")
         header = header[0:-1]+"\n"
         log.log(header)
         log.log("Beginning analysis at {T}".format(T = time.ctime()))
