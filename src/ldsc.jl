@@ -6,11 +6,27 @@ parser = ArgParseSettings()
     "--two-step"
         arg_type = Float64
         help = "Test statistic bound for use with the two-step estimator. Not compatible with --no-intercept and --constrain-intercept."
+    "--h2", type = str,
+        help = "Filename for a .sumstats[.gz] file for one-phenotype LD Score regression. "
+        "--h2 requires at minimum also setting the --ref-ld and --w-ld flags.")
+    "--h2-cts", type = str,
+        help = "Filename for a .sumstats[.gz] file for cell-type-specific analysis. "
+        "--h2-cts requires the --ref-ld-chr, --w-ld, and --ref-ld-chr-cts flags.")
+    "--rg", type = str,
+        help = "Comma-separated list of prefixes of .chisq filed for genetic correlation estimation.")
+    "--ref-ld", type = str,
+        help = "Use --ref-ld to tell LDSC which LD Scores to use as the predictors in the LD "
+        "Score regression. "
+        "LDSC will automatically append .l2.ldscore/.l2.ldscore.gz to the filename prefix.")
+
 end # add_arg_table parser
 args = parse_args(ARGS, parser)
-print(args["two-step"])
 
-"""
+#= sanity check
+print(args["two-step"])
+=#
+
+#= TODO arguments to be implemented
 "--out", default = "ldsc", type = str,
     help = "Output filename prefix. If --out is not set, LDSC will use ldsc as the "
     "defualt output filename prefix.")
@@ -79,18 +95,6 @@ print(args["two-step"])
 "--maf", type = Float64,
     help = "Minor allele frequency lower bound. Default is MAF > 0.")
 # Basic Flags for Working with Variance Components
-"--h2", type = str,
-    help = "Filename for a .sumstats[.gz] file for one-phenotype LD Score regression. "
-    "--h2 requires at minimum also setting the --ref-ld and --w-ld flags.")
-"--h2-cts", type = str,
-    help = "Filename for a .sumstats[.gz] file for cell-type-specific analysis. "
-    "--h2-cts requires the --ref-ld-chr, --w-ld, and --ref-ld-chr-cts flags.")
-"--rg", type = str,
-    help = "Comma-separated list of prefixes of .chisq filed for genetic correlation estimation.")
-"--ref-ld", type = str,
-    help = "Use --ref-ld to tell LDSC which LD Scores to use as the predictors in the LD "
-    "Score regression. "
-    "LDSC will automatically append .l2.ldscore/.l2.ldscore.gz to the filename prefix.")
 "--ref-ld-chr", type = str,
     help = "Same as --ref-ld, but will automatically concatenate .l2.ldscore files split "
     "across 22 chromosomes. LDSC will automatically append .l2.ldscore/.l2.ldscore.gz "
@@ -247,4 +251,4 @@ if __name__  =  =  "__main__":
         log.log("Analysis finished at {T}".format(T = time.ctime()) )
         time_elapsed = round(time.time()-start_time,2)
         log.log("Total time elapsed: {T}".format(T = sec_to_str(time_elapsed)))
-"""
+=#
