@@ -66,7 +66,7 @@ end
 
 function _load_testset_1(args)
     df_ref_id = DataFrames.DataFrame(CSV.File(args["ref-ld"] * ".l2.ldscore"))
-    df_h2 = DataFrames.DataFrame(CSV.File(args["h2"]))
+    df_h2 = DataFrames.DataFrame(CSV.File(args["h²"]))
 
     M_annot = reshape([[155881.2526]], (1, 1))
     w_ld_cname = "CHR"
@@ -93,18 +93,18 @@ function estimate_h2()
     ref_ld = sumstats[!, "LD"]
     ref_ld = reshape(ref_ld, (size(ref_ld)[1], 1))
     n_snp = size(sumstats)[1]
-    n_blocks = min(n_snp, LDScoreJulia.args["n_blocks"])
+    n_blocks = min(n_snp, LDScoreJulia.args["n-blocks"])
     n_annot = size(ref_ld_cnames)[1]
-    χ²_max = LDScoreJulia.args["χ²_max"]
+    χ²_max = LDScoreJulia.args["χ²-max"]
     old_weights = false
 
     if n_annot == 1
-        if LDScoreJulia.args["two_step"] == nothing && LDScoreJulia.args["intercept_h2"] == nothing
-            LDScoreJulia.args["two_step"] = 30
+        if LDScoreJulia.args["two-step"] == nothing && LDScoreJulia.args["intercept-h²"] == nothing
+            LDScoreJulia.args["two-step"] = 30
         end
     else
         old_weights = true
-        if LDScoreJulia.args["χ²_max"] == nothing
+        if LDScoreJulia.args["χ²-max"] == nothing
             χ²_max = max(0.001 * max(sumstats[!, "N"]), 80)
         end
     end
@@ -123,7 +123,7 @@ function estimate_h2()
 
     ĥ² = Hsq(
         χ², ref_ld, s(sumstats[!, w_ld_cname]), s(sumstats[!, "N"]), M_annot,
-        n_blocks, LDScoreJulia.args["intercept_h2"], false, LDScoreJulia.args["two_step"], old_weights,
+        n_blocks, LDScoreJulia.args["intercept-h²"], false, LDScoreJulia.args["two-step"], old_weights,
     )
 
     if LDScoreJulia.args["overlap_annot"]
