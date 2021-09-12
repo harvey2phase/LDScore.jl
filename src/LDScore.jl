@@ -1,6 +1,6 @@
 module LDScore
     include("ldsc.jl")
-    include("LDScore/LD_Score_Regression.jl")
+    include("LDScore/LDScoreRegression.jl")
     include("LDScore/Hsq.jl")
     include("LDScore/regression.jl")
     include("LDScore/sumstats.jl")

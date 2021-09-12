@@ -15,7 +15,7 @@ LDSC regression \[1\] implementation in Julia.
 - `estimate_h2`
 	- Only has one test case
 	- Lots of error checks missing
-- Build struct `Gencov` the same way `Hsq` is built to reuse abstract type `LD_Score_Regression` functions
+- Build struct `Gencov` the same way `Hsq` is built to reuse abstract type `LDScoreRegression` functions
 
 ## Estimating SNP-hertiability from summary statistics
 To estimate SNP-heritability, we need three sources of data:

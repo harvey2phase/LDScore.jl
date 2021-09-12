@@ -1,9 +1,9 @@
 """
-Subtype of `LD_Score_Regression`.
+Subtype of `LDScoreRegression`.
 """
 
 
-mutable struct Hsq <: LD_Score_Regression
+mutable struct Hsq <: LDScoreRegression
     y; x; w; N; M;
     n_blocks; intercept; slow; step1_ii; old_weights;
     __null_intercept__
