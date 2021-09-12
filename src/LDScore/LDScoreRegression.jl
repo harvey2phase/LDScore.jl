@@ -41,7 +41,16 @@ function ld_score_regression(
     y, x, w, N, M, n_blocks;
     intercept = nothing, slow = false, step1_ii = nothing, old_weights = false,
 )
-    n_snp, reg.n_annot = size(x) # TODO fix this
+    #= TODO
+    for i in [y, x, w, M, N]:
+    try:
+        if len(i.shape) != 2:
+            raise TypeError('Arguments must be 2D arrays.')
+    except AttributeError:
+        raise TypeError('Arguments must be arrays.')
+    =#
+
+    n_snp, reg.n_annot = size(x)
 
     M_tot = sum(M)
     # shape should be [n_snp, 1]
@@ -75,7 +84,6 @@ function ld_score_regression(
             "twostep not compatible with partitioned LD Score yet."
         ))
     elseif step1_ii != nothing
-        test_print("step1_ii", step1_ii)
         n1 = sum(step1_ii)
         reg.twostep_filtered = n_snp - n1
         s = dropdims(step1_ii; dims=2)
@@ -86,8 +94,41 @@ function ld_score_regression(
             end
         end
         yp1, w1, N1, initial_w1 = map(
-            (x) -> reshape(x[step1_ii], (n1, 1)), (yp, w, N, initial_w)
+            (a) -> reshape(a[step1_ii], (n1, 1)),
+            (yp, w, N, initial_w),
         )
+        update_func1 = reg._update_func(a, x1, w1, N1, M_tot, Nbar, ii=step1_ii)
+        #= TODO
+        step1_jknife = IRWLS(
+            x1, yp1, update_func1, n_blocks, slow=slow, w=initial_w1)
+        step1_int, _ = self._intercept(step1_jknife)
+        yp = yp - step1_int
+        x = remove_intercept(x)
+        x_tot = remove_intercept(x_tot)
+        update_func2 = lambda a: self._update_func(
+            a, x_tot, w, N, M_tot, Nbar, step1_int)
+        s = update_separators(step1_jknife.separators, step1_ii)
+        step2_jknife = IRWLS(
+            x, yp, update_func2, n_blocks, slow=slow, w=initial_w, separators=s)
+        c = np.sum(np.multiply(initial_w, x)) / \
+            np.sum(np.multiply(initial_w, np.square(x)))
+        jknife = self._combine_twostep_jknives(
+            step1_jknife, step2_jknife, M_tot, c, Nbar)
+        =#
+    elseif old_weights
+        #= TODO
+        initial_w = np.sqrt(initial_w)
+        x = IRWLS._weight(x, initial_w)
+        y = IRWLS._weight(yp, initial_w)
+        jknife = jk.LstsqJackknifeFast(x, y, n_blocks)
+        =#
+    else
+        #= TODO
+        update_func = lambda a: self._update_func(
+            a, x_tot, w, N, M_tot, Nbar, intercept)
+        jknife = IRWLS(
+            x, yp, update_func, n_blocks, slow=slow, w=initial_w)
+        =#
     end
 
     # TODO finish implementing this function
