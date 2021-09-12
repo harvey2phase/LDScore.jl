@@ -30,7 +30,7 @@ mutable struct IRWLS
     """
     function IRWLS(
         x::Matrix, y::Matrix, update_func, n_blocks::Integer;
-        w = nothing, slow = false, separators = nothing
+        w = nothing, slow = false, separators = nothing,
     )
         self = new()
 
