@@ -18,7 +18,7 @@ Example:
 See `Hsq.jl` for a case study example.
 """
 
-include("dev_tool.jl")
+include("dev_tools.jl")
 
 
 
