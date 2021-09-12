@@ -113,6 +113,7 @@ function _check_shape(x, y)
     if size(y)[2] != 1
         error("y must have shape (n_snp, 1)")
     end
+
     n, p = size(x)
     if p > n
         error("More dimensions than datapoints.")

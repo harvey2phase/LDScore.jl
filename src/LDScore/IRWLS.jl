@@ -34,16 +34,13 @@ mutable struct IRWLS
     )
         self = new()
 
-        n, p = _check_shape(x, y) # TODO in jackknife
+        n, p = _check_shape(x, y)
         if w == nothing
             w = ones(size(y))
         end
+
         if size(w) != (n, 1)
-            #= TODO
-            raise ValueError(
-                'w has shape {S}. w must have shape ({N}, 1).'.format(S=w.shape, N=n)
-            )
-            =#
+            error("`w` has shape $(size(w)). `w` must have shape ({$n}, 1).")
         end
 
         jknife = irwls(
