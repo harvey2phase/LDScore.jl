@@ -1,7 +1,4 @@
-"""
-Basic tests for the `Hsq` struct and associated function.
-Tests all pass.
-"""
+""" Basic tests for the `Hsq` struct and associated function. """
 
 include("../src/LDScoreJulia.jl")
 
