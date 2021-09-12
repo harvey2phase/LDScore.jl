@@ -38,7 +38,8 @@ mutable struct Hsq <: LDScoreRegression
         =#
 
         return hsq
-    end
+    end # function Hsq
+
 end
 
 
@@ -107,4 +108,33 @@ function overlap_output(
         ]
     end
     =#
+end
+
+"""
+Update function for IRWLS.
+
+`x` is the output of np.linalg.lstsq.
+`x[1]` is the regression coefficients.
+`size(x[1])` is `(# of dimensions, 1)`.
+The last element of `x[1]` is the intercept.
+
+`intercept == nothing` --> free intercept
+`intercept != nothing` --> constrained intercept
+"""
+function _update_func(
+    self::Hsq, x, ref_ld_tot, w_ld, N, M, Nbar;
+    intercept = nothing, ii = nothing,
+)
+    hsq = M * x[1][1] / Nbar
+    if intercept == nothing
+        intercept = max(x[1][2])  # divide by zero error if intercept < 0
+    else
+        if size(ref_ld_tot)[2] > 1
+            error("Design matrix has intercept column for constrained intercept regression!")
+        end
+    end
+
+    ld = reshape(ref_ld_tot[:, 1], size(w_ld))  # remove intercept
+    w = weights(self, ld, w_ld, N, M, hsq, intercept, ii)
+    return w
 end

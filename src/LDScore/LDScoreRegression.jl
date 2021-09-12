@@ -31,7 +31,7 @@ function ld_score_regression(
     intercept = nothing, slow = false, step1_ii = nothing, old_weights = false,
 )
     for i in [y, x, w, M, N]
-        length(shape(i)) != 2 && error("Arguments must be 2D arrays.")
+        length(size(i)) != 2 && error("Arguments must be 2D arrays.")
     end
 
     n_snp, reg.n_annot = size(x)
@@ -117,7 +117,7 @@ end # function ld_score_regression
 
 
 function aggregate(reg::LDScoreRegression, y, x, N, M; intercept = nothing)
-    intercept == nothing && intercept = reg.__null_intercept__
+    if intercept == nothing intercept = reg.__null_intercept__ end
 
     num = M * (mean(y) - intercept)
     denom = mean(x .* N)
