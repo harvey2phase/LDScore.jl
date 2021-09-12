@@ -75,7 +75,7 @@ function ld_score_regression(
         yp1, w1, N1, initial_w1 = map(
             (a) -> reshape(a[step1_ii], (n1, 1)), (yp, w, N, initial_w),
         )
-        update_func1 = reg._update_func(a, x1, w1, N1, M_tot, N̄, ii=step1_ii)
+        update_func1(a) = _update_func(reg, a, x1, w1, N1, M_tot, N̄, ii=step1_ii)
         #= TODO
         step1_jknife = IRWLS(
             x1, yp1, update_func1, n_blocks, slow=slow, w=initial_w1)

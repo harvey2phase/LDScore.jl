@@ -12,4 +12,5 @@ module LDScore
     export _read_sumstats
     export parse_sumstats
     export args
+    export _update_func
 end

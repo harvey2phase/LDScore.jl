@@ -1,3 +1,5 @@
+include("dev_tools.jl")
+
 """
     Hsq
 
@@ -122,10 +124,11 @@ The last element of `x[1]` is the intercept.
 `intercept != nothing` --> constrained intercept
 """
 function _update_func(
-    self::Hsq, x, ref_ld_tot, w_ld, N, M, Nbar;
+    self::Hsq, x, ref_ld_tot, w_ld, N, M, N̄;
     intercept = nothing, ii = nothing,
 )
-    hsq = M * x[1][1] / Nbar
+    test_print("x", x)
+    hsq = M * x[1][1] / N̄
     if intercept == nothing
         intercept = max(x[1][2])  # divide by zero error if intercept < 0
     else
@@ -135,6 +138,5 @@ function _update_func(
     end
 
     ld = reshape(ref_ld_tot[:, 1], size(w_ld))  # remove intercept
-    w = weights(self, ld, w_ld, N, M, hsq, intercept, ii)
-    return w
+    return weights(self, ld, w_ld, N, M, hsq, intercept, ii)
 end
