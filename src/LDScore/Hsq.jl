@@ -38,7 +38,6 @@ mutable struct Hsq <: LDScoreRegression
         =#
 
         return hsq
-
     end
 end
 

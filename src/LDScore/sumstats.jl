@@ -69,8 +69,7 @@ function estimate_h2()
     ĥ² = Hsq(
         χ², ref_ld, s(sumstats[!, w_ld_cname]), s(sumstats[!, "N"]), M_annot,
         n_blocks = n_blocks, intercept = args["intercept-h²"],
-        slow = false, twostep = args["two-step"],
-        old_weights = old_weights,
+        slow = false, twostep = args["two-step"], old_weights = old_weights,
     )
 
     if args["overlap-annot"]
