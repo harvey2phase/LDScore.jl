@@ -1,26 +1,14 @@
 """ Basic tests for the `Hsq` struct and associated function. """
 
 include("../src/LDScore.jl")
+include("test_tools.jl")
+
 
 using Main
 using Main.LDScore
 using Test
 
 eps = 1.0e-6 # accuracy of approximatly equal; the lower the more accurate
-
-approx(x, y, eps) = abs(x - y) <= eps
-
-function vector_approx(x, y, eps)
-    if size(x) != size(y)
-        return false
-    end
-    for (i, j) in enumerate(x)
-        if !approx(x[i], y[i], eps)
-            return false
-        end
-    end
-    return true
-end
 
 # Test to ensure that the basic structure of `Hsq` is intact
 @testset "Hsq struct" begin
