@@ -40,19 +40,14 @@ abstract type Jackknife end
 - *args, **kwargs :
     Arguments for inheriting jackknives.
 """
-function jackknife (x, y; n_blocks = nothing, separators = nothing)
+function jackknife(x, y; n_blocks = nothing, separators = nothing)
     self.N, self.p = _check_shape(x, y)
     if separators != nothing
         if max(separators) != self.N
-            #= TODO
-            raise ValueError(
-                "Max(separators) must be equal to number of data points.")
-            =#
+            error("Max(separators) must be equal to number of data points.")
         end
         if min(separators) != 0
-            #= TODO
-            raise ValueError("Max(separators) must be equal to 0.")
-            =#
+            error("Max(separators) must be equal to 0.")
         end
         self.separators = sort(separators)
         self.n_blocks = length(separators) - 1
@@ -60,9 +55,7 @@ function jackknife (x, y; n_blocks = nothing, separators = nothing)
         self.n_blocks = n_blocks
         self.separators = self.get_separators(self.N, self.n_blocks)
     else
-        #= TODO
-        raise ValueError("Must specify either n_blocks are separators.")
-        =#
+        error("Must specify either n_blocks are separators.")
     end
 
     if self.n_blocks > self.N
@@ -111,10 +104,9 @@ Converts whole-data estimate and delete values to pseudovalues.
 """
 function delete_values_to_pseudovalues(cls, delete_values, est)
     n_blocks, p = delete_values.shape
-    if est.shape != (1, p):
-        raise ValueError(
-            "Different number of parameters in delete_values than in est."
-        )
+    if est.shape != (1, p)
+        error("Different number of parameters in delete_values than in est.")
+    end
 
     return n_blocks * est - (n_blocks - 1) * delete_values
 end
@@ -127,31 +119,36 @@ end
 
 
 "Check that x and y have the correct shapes (for regression jackknives)."
-function _check_shape(x, y):
-    if len(x.shape) != 2 or len(y.shape) != 2:
-        raise ValueError("x and y must be 2D arrays.")
-    if x.shape[0] != y.shape[0]:
-        raise ValueError(
-            "Number of datapoints in x != number of datapoints in y.")
-    if y.shape[1] != 1:
-        raise ValueError("y must have shape (n_snp, 1)")
-    n, p = x.shape
-    if p > n:
-        raise ValueError("More dimensions than datapoints.")
+function _check_shape(x, y)
+    if length(size(x)) != 2 || length(size(y)) != 2
+        error("x and y must be 2D arrays.")
+    end
+    if size(x)[1] != size(y)[1]
+        error("Number of datapoints in x != number of datapoints in y.")
+    end
+    if size(y)[2] != 1
+        error("y must have shape (n_snp, 1)")
+    end
+    n, p = size(x)
+    if p > n
+        error("More dimensions than datapoints.")
+    end
 
     return (n, p)
 end # function _check_shape
 
 
-def _check_shape_block(xty_block_values, xtx_block_values):
+function _check_shape_block(xty_block_values, xtx_block_values)
     """Check that xty_block_values and xtx_block_values have correct shapes."""
-    if xtx_block_values.shape[0:2] != xty_block_values.shape:
-        raise ValueError(
-            "Shape of xty_block_values must equal shape of first two dimensions of xty_block_values.")
-    if len(xtx_block_values.shape) < 3:
-        raise ValueError("xtx_block_values must be a 3D array.")
-    if xtx_block_values.shape[1] != xtx_block_values.shape[2]:
-        raise ValueError(
-            "Last two axes of xtx_block_values must have same dimension.")
+    if xtx_block_values.shape[0:2] != xty_block_values.shape
+        error("Shape of xty_block_values must equal shape of first two dimensions of xty_block_values.")
+    end
+    if len(xtx_block_values.shape) < 3
+        error("xtx_block_values must be a 3D array.")
+    end
+    if xtx_block_values.shape[1] != xtx_block_values.shape[2]
+        error("Last two axes of xtx_block_values must have same dimension.")
+    end
 
     return xtx_block_values.shape[0:2]
+end # function _check_shape_block
