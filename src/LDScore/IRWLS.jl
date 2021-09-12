@@ -1,66 +1,55 @@
 """
+    IRWLS
+
 Iterativey re-weighted least squares.
+
+# Attributes
+- est: np.matrix with shape (1, p). IRWLS estimate.
+- jknife_est: np.matrix with shape (1, p). Jackknifed estimate.
+- jknife_var: np.matrix with shape (1, p). Variance of jackknifed estimate.
+- jknife_se: np.matrix with shape (1, p). Standard error of jackknifed estimate, equal to sqrt(jknife_var).
+- jknife_cov: np.matrix with shape (p, p). Covariance matrix of jackknifed estimate.
+- delete_values: np.matrix with shape (n_blocks, p). Jackknife delete values.
+
+# Methods
+wls(x, y, w): Weighted Least Squares.
+_weight(x, w): Weight x by w.
 """
+mutable struct IRWLS
+    est; jknife_se; jknife_est; jknife_var; jknife_cov; delete_values; separators;
 
-from __future__ import division
-import numpy as np
-import jackknife as jk
+    """
+    # Arguments
+    - `x::Matrix`: Independent variable with shape `(n, p)`.
+    - `y::Matrix`: Dependent variable with shape `(n, 1)`.
+    - `update_func`: Function.
+    - `n_blocks::Integer`: Number of jackknife blocks (for estimating SE via block jackknife).
+    - `w::Matrix`: Initial regression weights with shape `(n, 1)`
+        (default is the identity matrix). These should be on the inverse CVF scale.
+    - `slow::Bool`: Use slow block jackknife? (Mostly for testing)
+    """
+    function IRWLS(
+        x::Matrix, y::Matrix, update_func, n_blocks::Integer;
+        w = nothing, slow = false, separators = nothing
+    )
+        self = new()
 
-class IRWLS(object):
-
-    '''
-    Iteratively re-weighted least squares (FLWS).
-
-    Parameters
-    ----------
-    x : np.matrix with shape (n, p)
-        Independent variable.
-    y : np.matrix with shape (n, 1)
-        Dependent variable.
-    update_func : function
-        Transforms output of np.linalg.lstsq to new weights.
-    n_blocks : int
-        Number of jackknife blocks (for estimating SE via block jackknife).
-    w : np.matrix with shape (n, 1)
-        Initial regression weights (default is the identity matrix). These should be on the
-        inverse CVF scale.
-    slow : bool
-        Use slow block jackknife? (Mostly for testing)
-
-    Attributes
-    ----------
-    est : np.matrix with shape (1, p)
-        IRWLS estimate.
-    jknife_est : np.matrix with shape (1, p)
-        Jackknifed estimate.
-    jknife_var : np.matrix with shape (1, p)
-        Variance of jackknifed estimate.
-    jknife_se : np.matrix with shape (1, p)
-        Standard error of jackknifed estimate, equal to sqrt(jknife_var).
-    jknife_cov : np.matrix with shape (p, p)
-        Covariance matrix of jackknifed estimate.
-    delete_values : np.matrix with shape (n_blocks, p)
-        Jackknife delete values.
-
-    Methods
-    -------
-    wls(x, y, w) :
-        Weighted Least Squares.
-    _weight(x, w) :
-        Weight x by w.
-
-    '''
-
-    def __init__(self, x, y, update_func, n_blocks, w=None, slow=False, separators=None):
-        n, p = jk._check_shape(x, y)
-        if w is None:
-            w = np.ones_like(y)
-        if w.shape != (n, 1):
+        n, p = _check_shape(x, y) # TODO in jackknife
+        if w == nothing
+            w = ones(size(y))
+        end
+        if size(w) != (n, 1)
+            #= TODO
             raise ValueError(
-                'w has shape {S}. w must have shape ({N}, 1).'.format(S=w.shape, N=n))
+                'w has shape {S}. w must have shape ({N}, 1).'.format(S=w.shape, N=n)
+            )
+            =#
+        end
 
-        jknife = self.irwls(
-            x, y, update_func, n_blocks, w, slow=slow, separators=separators)
+        jknife = irwls(
+            self, x, y, update_func, n_blocks, w,
+            slow = slow, separators = separators,
+        )
         self.est = jknife.est
         self.jknife_se = jknife.jknife_se
         self.jknife_est = jknife.jknife_est
@@ -69,6 +58,11 @@ class IRWLS(object):
         self.delete_values = jknife.delete_values
         self.separators = jknife.separators
 
+        return self
+    end # function IRWLS
+end # mutable struct IRWLS
+
+    #=
     @classmethod
     def irwls(cls, x, y, update_func, n_blocks, w, slow=False, separators=None):
         '''
@@ -191,3 +185,4 @@ class IRWLS(object):
         w = w / float(np.sum(w))
         x_new = np.multiply(x, w)
         return x_new
+    =#

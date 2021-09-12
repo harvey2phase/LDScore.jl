@@ -1,8 +1,8 @@
 """
-Subtype of `LDScoreRegression`.
+    Hsq
+
+Subtype of `LDScoreRegression` for computing heritability h².
 """
-
-
 mutable struct Hsq <: LDScoreRegression
     y; x; w; N; M;
     n_blocks; intercept; slow; old_weights;

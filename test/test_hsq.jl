@@ -8,10 +8,10 @@ using Main
 using Main.LDScore
 using Test
 
-eps = 1.0e-6 # accuracy of approximatly equal; the lower the more accurate
+"Accuracy of approximatly equal; the lower the more accurate"
+eps = 1.0e-6
 
-# Test to ensure that the basic structure of `Hsq` is intact
-@testset "Hsq struct" begin
+@testset "Ensure basic Hsq struct works" begin
     # column vectors d = 6 * 1
     y = [[0.2061] [0.2601] [4.3514] [6.1703] [5.0221] [2.418]]'
     x = [[6.1388] [6.4785] [8.88] [4.8064] [3.6219] [3.7244]]'

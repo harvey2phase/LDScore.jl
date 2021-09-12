@@ -24,7 +24,7 @@ See `Hsq.jl` for a case study example.
 abstract type LDScoreRegression end
 
 
-function aggregate(reg::LDScoreRegression, y, x, N, M; intercept=nothing)
+function aggregate(reg::LDScoreRegression, y, x, N, M; intercept = nothing)
     if intercept == nothing
         intercept = reg.__null_intercept__
     end
