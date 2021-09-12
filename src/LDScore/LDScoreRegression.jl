@@ -1,27 +1,26 @@
-"""
-An abstract type LDScoreRegression. Existing subtypes include `Hsq`.
-Subtypes and necessary functions should be implemented as needed
-(see example below).
-
-Example:
-    mutable struct Regression <: LDScoreRegression
-        ...
-
-        function Regression(...)
-            new(...)
-        end
-    end
-
-    function update_weights(reg::Regression, ...)
-    end
-
-See `Hsq.jl` for a case study example.
-"""
-
 include("dev_tools.jl")
 
+"""
+    LDScoreRegression
 
+An abstract type for basic LDSC regression functionalities.
+Subtypes and necessary functions should be implemented as needed;
+existing subtypes include `Hsq`.
 
+# Examples
+```
+mutable struct Regression <: LDScoreRegression
+    ...
+
+    function Regression(...)
+        new(...)
+    end
+end
+
+function update_weights(reg::Regression, ...) end
+```
+See `Hsq.jl` for a case study example.
+"""
 abstract type LDScoreRegression end
 
 
