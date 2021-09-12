@@ -5,22 +5,40 @@ Subtype of `LDScoreRegression`.
 
 mutable struct Hsq <: LDScoreRegression
     y; x; w; N; M;
-    n_blocks; intercept; slow; step1_ii; old_weights;
+    n_blocks; intercept; slow; old_weights;
     __null_intercept__
 
     constrain_intercept; n_annot; intercept_se; twostep_filtered;
 
     function Hsq(
-        y, x, w, N, M; n_blocks = 200, slow = false, old_weights = false,
-        intercept = nothing, step1_ii = nothing,
+        y, x, w, N, M;
+        n_blocks = 200, slow = false, old_weights = false,
+        intercept = nothing, twostep = nothing,
     )
+        step1_ii = nothing
+        if twostep != nothing
+            step1_ii = y .< twostep
+        end
+
         hsq = new(
-            y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights, 1,
+            y, x, w, N, M, n_blocks, intercept, slow, old_weights, 1,
         )
-        return ld_score_regression(
-            hsq,
-            y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
+        hsq = ld_score_regression(
+            hsq, y, x, w, N, M, n_blocks,
+            intercept = intercept, slow = slow,
+            step1_ii = step1_ii, old_weights = old_weights,
         )
+
+        #= TODO implement these in LDScoreRegression
+        hsq.mean_chisq, hsq.lambda_gc = hsq._summarize_chisq(y)
+        if !hsq.constrain_intercept:
+            hsq.ratio, hsq.ratio_se = hsq._ratio(
+                hsq.intercept, hsq.intercept_se, hsq.mean_chisq,
+            )
+        =#
+
+        return hsq
+
     end
 end
 

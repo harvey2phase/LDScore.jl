@@ -21,18 +21,14 @@ eps = 1.0e-6 # accuracy of approximatly equal; the lower the more accurate
     n_blocks = 2
     intercept = nothing
     slow = false
-    step1_ii = [[true] [true] [true] [true] [true] [true]]'
     old_weights = false
 
     hsq = LDScore.Hsq(
         y, x, w, N, M, n_blocks = n_blocks, intercept = intercept, slow = slow,
-        step1_ii = step1_ii, old_weights = old_weights,
+        old_weights = old_weights,
     )
 
     hsq.old_weights == false
-    LDScore.ld_score_regression(
-        hsq, y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
-    )
 
     @test typeof(hsq) == LDScore.Hsq
     @test hsq.__null_intercept__ == 1
@@ -44,7 +40,6 @@ eps = 1.0e-6 # accuracy of approximatly equal; the lower the more accurate
     @test hsq.n_blocks == n_blocks
     @test hsq.intercept == intercept
     @test hsq.slow == slow
-    @test hsq.step1_ii == step1_ii
 end
 
 
@@ -56,7 +51,7 @@ end
     M = [[7]]
     hsq = LDScore.Hsq(
         χ², ld, w_ld, N, M, n_blocks = 3, intercept = 1,
-        slow = false, old_weights = false, step1_ii = nothing,
+        slow = false, old_weights = false, twostep = nothing,
     )
 
     @testset "weights" begin

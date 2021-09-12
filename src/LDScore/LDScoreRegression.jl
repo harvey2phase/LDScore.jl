@@ -18,6 +18,9 @@ Example:
 See `Hsq.jl` for a case study example.
 """
 
+include("dev_tool.jl")
+
+
 
 abstract type LDScoreRegression end
 
@@ -35,7 +38,8 @@ end # function aggregate
 
 function ld_score_regression(
     reg::LDScoreRegression,
-    y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
+    y, x, w, N, M, n_blocks;
+    intercept = nothing, slow = false, step1_ii = nothing, old_weights = false,
 )
     n_snp, reg.n_annot = size(x) # TODO fix this
 
@@ -61,7 +65,6 @@ function ld_score_regression(
         intercept_se = "NA"
     end
 
-    #=
     reg.twostep_filtered = nothing
     if step1_ii != nothing && reg.constrain_intercept
         throw(ErrorException(
@@ -86,7 +89,6 @@ function ld_score_regression(
             (x) -> reshape(x[step1_ii], (n1, 1)), (yp, w, N, initial_w)
         )
     end
-    =#
 
     # TODO finish implementing this function
 
