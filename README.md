@@ -1,6 +1,6 @@
 # LDScore
 
-LDSC implementation based on (1) implemented in Julia.
+LDSC \[1\] implementation in Julia.
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://harvey2phase.github.io/LDScore.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://harvey2phase.github.io/LDScore.jl/dev)
