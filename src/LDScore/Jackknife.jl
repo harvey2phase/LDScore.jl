@@ -6,22 +6,17 @@ for statistics computed from independent and dependent variables (e.g., regressi
 The __delete_vals_to_pseudovalues__ and __jknife__ methods will still be useful for other
 sorts of statistics, but the __init__ method will need to be overriden.
 
-
 # Attributes
-n_blocks : int
-    Number of jackknife blocks
-p : int
-    Dimensionality of the independent varianble
-N : int
-    Number of datapoints (equal to x.shape[0])
+- `n_blocks::Integer`: Number of jackknife blocks.
+- `p::Integer`: Dimensionality of the independent varianble.
+- `N::Integer`: Number of datapoints (equal to `size(x)[1]`).
 
-# Methods
--------
-jknife(pseudovalues):
+# Functions
+- `jknife(pseudovalues)`:
     Computes jackknife estimate and variance from the jackknife pseudovalues.
-delete_vals_to_pseudovalues(delete_vals, est):
+- `delete_vals_to_pseudovalues(delete_vals, est)`:
     Converts delete values and the whole-data estimate to pseudovalues.
-get_separators():
+- `get_separators()`:
     Returns (approximately) evenly-spaced jackknife block boundaries.
 """
 abstract type Jackknife end
@@ -31,14 +26,9 @@ abstract type Jackknife end
 "Constructor" for abstract type `Jackknife`.
 
 # Parameters
-- x : np.matrix with shape (n, p)
-    Independent variable.
-- y : np.matrix with shape (n, 1)
-    Dependent variable.
-- n_blocks : int
-    Number of jackknife blocks
-- *args, **kwargs :
-    Arguments for inheriting jackknives.
+- `x::Matric`: Independent variable with shape `(n, p)`.
+- `y::Matrix`: Dependent variable with shape `(n, 1)`.
+- `n_blocks::Integer`: Number of jackknife blocks.
 """
 function jackknife(x, y; n_blocks = nothing, separators = nothing)
     self.N, self.p = _check_shape(x, y)
@@ -68,43 +58,37 @@ end # function jackknife
 Converts pseudovalues to jackknife estimate and variance.
 
 # Arguments
-- pseudovalues: np.matrix pf floats with shape (n_blocks, p)
+- `pseudovalues::Matrix`: pf floats with shape `(n_blocks, p)`.
 
 # Returns
-- jknife_est: np.matrix with shape (1, p)
-    Jackknifed estimate.
-- jknife_var: np.matrix with shape (1, p)
-    Variance of jackknifed estimate.
-- jknife_se: np.matrix with shape (1, p)
-    Standard error of jackknifed estimate, equal to sqrt(jknife_var).
-- jknife_cov: np.matrix with shape (p, p)
-    Covariance matrix of jackknifed estimate.
+- `jknife_est::Matrix`: Jackknifed estimate with shape `(1, p)`.
+- `jknife_var::Matrix`: Variance of jackknifed estimate with shape `(1, p)`.
+- `jknife_se::Matrix`: Standard error of jackknifed estimate, equal to `sqrt(jknife_var)` with shape `(1, p)`.
+- `jknife_cov::Matrix`: Covariance matrix of jackknifed estimate with shape `(p, p)`.
 """
 function jknife(cls, pseudovalues)
     n_blocks = size(pseudovalues)[1]
-    jknife_cov = atleast_2d(np.cov(pseudovalues.T, ddof=1) / n_blocks)
-    jknife_var = np.atleast_2d(np.diag(jknife_cov))
-    jknife_se = np.atleast_2d(np.sqrt(jknife_var))
-    jknife_est = np.atleast_2d(np.mean(pseudovalues, axis=0))
+    jknife_cov = atleast_2d(cov(pseudovalues.T, ddof = 1) / n_blocks)
+    jknife_var = atleast_2d(diag(jknife_cov))
+    jknife_se = atleast_2d(sqrt(jknife_var))
+    jknife_est = atleast_2d(mean(pseudovalues, axis=0))
     return (jknife_est, jknife_var, jknife_se, jknife_cov)
 end # function jknife
 
 """
 Converts whole-data estimate and delete values to pseudovalues.
+Raises error if `size(est) != (1, size(delete_values)[2])`
 
 # Arguments
-- delete_values: np.matrix with shape (n_blocks, p). Delete values.
-- est: np.matrix with shape (1, p). Whole-data estimate.
+- `delete_values::Matrix`: Delete values with shape (of the matrix) `(n_blocks, p)`.
+- `est::Matrix`: Whole-data estimate with shape `(1, p)`.
 
 # Returns
-- pseudovalues: np.matrix with shape (n_blocks, p) Psuedovalues.
-
-# Raises
-- ValueError: If est.shape != (1, delete_values.shape[1])
+- `pseudovalues::Matrix`: Psuedovalues with shape `(n_blocks, p)`.
 """
 function delete_values_to_pseudovalues(cls, delete_values, est)
-    n_blocks, p = delete_values.shape
-    if est.shape != (1, p)
+    n_blocks, p = size(delete_values)
+    if size(est) != (1, p)
         error("Different number of parameters in delete_values than in est.")
     end
 
@@ -114,11 +98,11 @@ end
 
 "Define evenly-spaced block boundaries."
 function get_separators(cls, N, n_blocks)
-    return np.floor(np.linspace(0, N, n_blocks + 1)).astype(int)
+    return convert(Vector{Int}, floor.(range(0, N, n_blocks + 1)))
 end
 
 
-"Check that x and y have the correct shapes (for regression jackknives)."
+"Check that `x` and `y` have the correct shapes (for regression jackknives)."
 function _check_shape(x, y)
     if length(size(x)) != 2 || length(size(y)) != 2
         error("x and y must be 2D arrays.")
@@ -140,15 +124,15 @@ end # function _check_shape
 
 function _check_shape_block(xty_block_values, xtx_block_values)
     """Check that xty_block_values and xtx_block_values have correct shapes."""
-    if xtx_block_values.shape[0:2] != xty_block_values.shape
+    if size(xtx_block_values)[1:3] != size(xty_block_values)
         error("Shape of xty_block_values must equal shape of first two dimensions of xty_block_values.")
     end
-    if len(xtx_block_values.shape) < 3
+    if length(size(xtx_block_values)) < 3
         error("xtx_block_values must be a 3D array.")
     end
-    if xtx_block_values.shape[1] != xtx_block_values.shape[2]
+    if size(xtx_block_values)[2] != size(xtx_block_values)[3]
         error("Last two axes of xtx_block_values must have same dimension.")
     end
 
-    return xtx_block_values.shape[0:2]
+    return size(xtx_block_values)[1:3]
 end # function _check_shape_block
