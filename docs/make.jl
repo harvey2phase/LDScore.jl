@@ -1,16 +1,16 @@
-using LDScoreJulia
+using LDScore
 using Documenter
 
-DocMeta.setdocmeta!(LDScoreJulia, :DocTestSetup, :(using LDScoreJulia); recursive=true)
+DocMeta.setdocmeta!(LDScore, :DocTestSetup, :(using LDScore); recursive=true)
 
 makedocs(;
-    modules=[LDScoreJulia],
+    modules=[LDScore],
     authors="Harvey Wang",
-    repo="https://github.com/harvey2phase/LDScoreJulia.jl/blob/{commit}{path}#{line}",
-    sitename="LDScoreJulia.jl",
+    repo="https://github.com/harvey2phase/LDScore.jl/blob/{commit}{path}#{line}",
+    sitename="LDScore.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://harvey2phase.github.io/LDScoreJulia.jl",
+        canonical="https://harvey2phase.github.io/LDScore.jl",
         assets=String[],
     ),
     pages=[
@@ -19,5 +19,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/harvey2phase/LDScoreJulia.jl",
+    repo="github.com/harvey2phase/LDScore.jl",
 )

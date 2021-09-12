@@ -1,12 +1,12 @@
 """
-Tests for `estimate_h2`.
+Tests for the function `estimate_h2`.
 Tests all fail because `ld_score_regression` is only half-implemented.
 """
 
-include("../src/LDScoreJulia.jl")
+include("../src/LDScore.jl")
 
 using Main
-using Main.LDScoreJulia
+using Main.LDScore
 using Test
 
 approx(x, y, eps) = abs(x - y) <= eps
@@ -16,28 +16,17 @@ function vector_approx(x, y, eps)
         return false
     end
     for (i, j) in enumerate(x)
-        if !approx(x[i], y[i], eps)
-            return false
-        end
+        if !approx(x[i], y[i], eps) return false end
     end
     return true
 end
 
-# Test case from original ldsc repo
-x = LDScoreJulia.estimate_h2(
-    Dict([
-        ("ref_id", "LDScoreJulia/test/test_ldscore/oneld_onefile"),
-        ("w_ld", "LDScoreJulia/test/test_ldscore/w"),
-        ("h2", "LDScoreJulia/test/test_sumstats/1"),
-        ("out", "LDScoreJulia/test/test_out/1"),
+LDScore.args["ref-ld"] = "test/test_ldscore/oneld_onefile"
+LDScore.args["w-ld"] = "test/test_ldscore/w"
+LDScore.args["h²"] = "test/test_sumstats/1"
+LDScore.args["out"] = "test/test_out/1"
 
-        # default parser arguments
-        ("n_blocks", 200),
-        ("χ²_max", nothing),
-        ("two_step", nothing),
-        ("intercept_h2", nothing),
-        ("overlap_annot", false),
-    ])
-)
+# Test case from original ldsc repo
+x = LDScore.estimate_h2()
 
 # TODO finish implementing `ld_score_regression`

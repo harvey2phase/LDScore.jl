@@ -26,9 +26,9 @@ jobs:
           Pkg.develop(PackageSpec(path=pwd()))
           Pkg.instantiate()
           using Documenter: DocMeta, doctest
-          using LDScoreJulia
-          DocMeta.setdocmeta!(LDScoreJulia, :DocTestSetup, :(using LDScoreJulia); recursive=true)
-          doctest(LDScoreJulia)
+          using LDScore
+          DocMeta.setdocmeta!(LDScore, :DocTestSetup, :(using LDScore); recursive=true)
+          doctest(LDScore)
           include("docs/make.jl")'
       after_success: skip
 after_success:

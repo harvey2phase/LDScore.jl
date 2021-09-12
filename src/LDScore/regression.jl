@@ -1,9 +1,8 @@
 using Statistics
 
-include("LD_Score_Regression.jl")
-include("Hsq.jl")
 
 # TODO improve error-handeling (the Julian way)
+
 
 function fmax(col_vec, val)
     new = zeros(0)

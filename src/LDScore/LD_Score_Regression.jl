@@ -1,6 +1,7 @@
 """
-To use this abstract type and avaliable functions,
-create a subtype and implement the necessary functions.
+An abstract type LD_Score_Regression. Existing subtypes include `Hsq`.
+Subtypes and necessary functions should be implemented as needed
+(see example below).
 
 Example:
     mutable struct Regression <: LD_Score_Regression
@@ -17,21 +18,8 @@ Example:
 See `Hsq.jl` for a case study example.
 """
 
-abstract type LD_Score_Regression end
 
-# TODO need to find jackknife library or implement it
-#function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
-#function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
-#function _coef(reg::LD_Score_Regression, jknife, Nbar) end
-#function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
-#function _tot(reg::LD_Score_Regression, cat, cat_cov) end
-#function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
-#function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
-#function _intercept(reg::LD_Score_Regression, jknife) end
-#function _combine_twostep_jknives(
-#    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
-#) end
-#function _delete_vals_tot(reg::LD_Score_Regression) end
+abstract type LD_Score_Regression end
 
 
 function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
@@ -42,7 +30,7 @@ function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
     num = M * (mean(y) - intercept)
     denom = mean(x .* N)
     return num / denom
-end
+end # function aggregate
 
 
 function ld_score_regression(
@@ -69,20 +57,22 @@ function ld_score_regression(
         x, x_tot = append_intercept(x), append_intercept(x_tot)
         yp = y
     else
-        yp = y - intercept
+        yp = y .- intercept
         intercept_se = "NA"
     end
 
+    #=
     reg.twostep_filtered = nothing
     if step1_ii != nothing && reg.constrain_intercept
         throw(ErrorException(
             "twostep is not compatible with constrain_intercept."
         ))
-    elseif !(step1_ii == nothing) && reg.n_annot > 1
+    elseif step1_ii != nothing && reg.n_annot > 1
         throw(ErrorException(
             "twostep not compatible with partitioned LD Score yet."
         ))
-    elseif !(step1_ii == nothing)
+    elseif step1_ii != nothing
+        test_print("step1_ii", step1_ii)
         n1 = sum(step1_ii)
         reg.twostep_filtered = n_snp - n1
         s = dropdims(step1_ii; dims=2)
@@ -96,9 +86,25 @@ function ld_score_regression(
             (x) -> reshape(x[step1_ii], (n1, 1)), (yp, w, N, initial_w)
         )
     end
+    =#
 
     # TODO finish implementing this function
 
 
     return reg
-end
+end # function ld_score_regression
+
+
+# TODO need to find jackknife library or implement it
+#function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
+#function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
+#function _coef(reg::LD_Score_Regression, jknife, Nbar) end
+#function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
+#function _tot(reg::LD_Score_Regression, cat, cat_cov) end
+#function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
+#function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
+#function _intercept(reg::LD_Score_Regression, jknife) end
+#function _combine_twostep_jknives(
+#    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
+#) end
+#function _delete_vals_tot(reg::LD_Score_Regression) end

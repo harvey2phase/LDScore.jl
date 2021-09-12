@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = LDScoreJulia
+CurrentModule = LDScore
 ```
 
-# LDScoreJulia
+# LDScore
 
-Documentation for [LDScoreJulia](https://github.com/harvey2phase/LDScoreJulia.jl).
+Documentation for [LDScore](https://github.com/harvey2phase/LDScore.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [LDScoreJulia]
+Modules = [LDScore]
 ```
