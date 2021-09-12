@@ -11,10 +11,10 @@ using Main.LDScore
 using Test
 
 
-LDScore.args["ref-ld"] = "test/test_ldscore/oneld_onefile"
-LDScore.args["w-ld"] = "test/test_ldscore/w"
-LDScore.args["h²"] = "test/test_sumstats/1"
-LDScore.args["out"] = "test/test_out/1"
+LDScore.args["ref-ld"] = "test/simulate_test/ldscore/oneld_onefile"
+LDScore.args["w-ld"] = "test/simulate_test/ldscore/w"
+LDScore.args["h²"] = "test/simulate_test/sumstats/1"
+LDScore.args["out"] = "test/simulate_test/1"
 
 # Test case from original ldsc repo
 x = LDScore.estimate_h2()

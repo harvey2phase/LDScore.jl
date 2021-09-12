@@ -11,7 +11,7 @@ using Test
 "Accuracy of approximatly equal; the lower the more accurate"
 eps = 1.0e-6
 
-@testset "Ensure basic Hsq struct works" begin
+#@testset "Ensure basic Hsq struct works" begin
     # column vectors d = 6 * 1
     y = [[0.2061] [0.2601] [4.3514] [6.1703] [5.0221] [2.418]]'
     x = [[6.1388] [6.4785] [8.88] [4.8064] [3.6219] [3.7244]]'
@@ -40,10 +40,10 @@ eps = 1.0e-6
     @test hsq.n_blocks == n_blocks
     @test hsq.intercept == intercept
     @test hsq.slow == slow
-end
+#end
 
 
-@testset "Hsq functions" begin
+#@testset "Hsq functions" begin
     χ² = ones((4, 1)) .* 4
     ld = ones((4, 1))
     w_ld = ones((4, 1))
@@ -78,4 +78,4 @@ end
         agg = LDScore.aggregate(hsq, χ², ld, N, M; intercept = 1.5)
         approx(agg, 0, eps)
     end
-end
+#end
