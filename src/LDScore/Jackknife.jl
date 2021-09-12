@@ -46,12 +46,12 @@ function jackknife (x, y; n_blocks = nothing, separators = nothing)
         if max(separators) != self.N
             #= TODO
             raise ValueError(
-                'Max(separators) must be equal to number of data points.')
+                "Max(separators) must be equal to number of data points.")
             =#
         end
         if min(separators) != 0
             #= TODO
-            raise ValueError('Max(separators) must be equal to 0.')
+            raise ValueError("Max(separators) must be equal to 0.")
             =#
         end
         self.separators = sort(separators)
@@ -61,12 +61,12 @@ function jackknife (x, y; n_blocks = nothing, separators = nothing)
         self.separators = self.get_separators(self.N, self.n_blocks)
     else
         #= TODO
-        raise ValueError('Must specify either n_blocks are separators.')
+        raise ValueError("Must specify either n_blocks are separators.")
         =#
     end
 
     if self.n_blocks > self.N
-        error('More blocks than data points.')
+        error("More blocks than data points.")
     end
 end # function jackknife
 
@@ -129,29 +129,29 @@ end
 "Check that x and y have the correct shapes (for regression jackknives)."
 function _check_shape(x, y):
     if len(x.shape) != 2 or len(y.shape) != 2:
-        raise ValueError('x and y must be 2D arrays.')
+        raise ValueError("x and y must be 2D arrays.")
     if x.shape[0] != y.shape[0]:
         raise ValueError(
-            'Number of datapoints in x != number of datapoints in y.')
+            "Number of datapoints in x != number of datapoints in y.")
     if y.shape[1] != 1:
-        raise ValueError('y must have shape (n_snp, 1)')
+        raise ValueError("y must have shape (n_snp, 1)")
     n, p = x.shape
     if p > n:
-        raise ValueError('More dimensions than datapoints.')
+        raise ValueError("More dimensions than datapoints.")
 
     return (n, p)
 end # function _check_shape
 
 
 def _check_shape_block(xty_block_values, xtx_block_values):
-    '''Check that xty_block_values and xtx_block_values have correct shapes.'''
+    """Check that xty_block_values and xtx_block_values have correct shapes."""
     if xtx_block_values.shape[0:2] != xty_block_values.shape:
         raise ValueError(
-            'Shape of xty_block_values must equal shape of first two dimensions of xty_block_values.')
+            "Shape of xty_block_values must equal shape of first two dimensions of xty_block_values.")
     if len(xtx_block_values.shape) < 3:
-        raise ValueError('xtx_block_values must be a 3D array.')
+        raise ValueError("xtx_block_values must be a 3D array.")
     if xtx_block_values.shape[1] != xtx_block_values.shape[2]:
         raise ValueError(
-            'Last two axes of xtx_block_values must have same dimension.')
+            "Last two axes of xtx_block_values must have same dimension.")
 
     return xtx_block_values.shape[0:2]
