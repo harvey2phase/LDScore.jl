@@ -1,4 +1,4 @@
-module LDScoreJulia
+module LDScore
     include("ldsc.jl")
     include("LDScore/LD_Score_Regression.jl")
     include("LDScore/Hsq.jl")

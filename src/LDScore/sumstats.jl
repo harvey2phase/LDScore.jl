@@ -2,7 +2,6 @@
 Summary statistics.
 """
 
-
 using CSV
 using DataFrames
 
@@ -30,7 +29,7 @@ end
 
 """ Estimate h² and partitioned h² """
 function estimate_h2()
-    args = deepcopy(LDScoreJulia.args)
+    args = deepcopy(LDScore.args)
 
     # TODO: more checking
 
@@ -115,7 +114,7 @@ end
 function _read_ref_ld()
     # Read reference LD Scores
     ref_ld = _read_chr_split_files(
-        LDScoreJulia.args["ref-ld-chr"], LDScoreJulia.args["ref-ld"],
+        LDScore.args["ref-ld-chr"], LDScore.args["ref-ld"],
         "reference panel LD Score", ldscore_fromlist,
     )
     @info "Num. of SNPs read for reference panel LD Scores:" size(ref_ld)
@@ -124,8 +123,8 @@ end
 
 
 function _load_testset_1()
-    df_ref_id = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["ref-ld"] * ".l2.ldscore"))
-    df_h2 = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["h²"]))
+    df_ref_id = DataFrames.DataFrame(CSV.File(LDScore.args["ref-ld"] * ".l2.ldscore"))
+    df_h2 = DataFrames.DataFrame(CSV.File(LDScore.args["h²"]))
 
     M_annot = reshape([[155881.2526]], (1, 1))
     w_ld_cname = "CHR"
