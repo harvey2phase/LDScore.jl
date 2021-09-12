@@ -1,6 +1,7 @@
 """
-To use this abstract type and avaliable functions,
-create a subtype and implement the necessary functions.
+An abstract type LD_Score_Regression. Existing subtypes include `Hsq`.
+Subtypes and necessary functions should be implemented as needed
+(see example below).
 
 Example:
     mutable struct Regression <: LD_Score_Regression
@@ -17,28 +18,8 @@ Example:
 See `Hsq.jl` for a case study example.
 """
 
-function test_print(name, value)
-    println("=================================================================")
-    println(name)
-    println(value)
-    println("-----------------------------------------------------------------")
-end # test_print
 
 abstract type LD_Score_Regression end
-
-# TODO need to find jackknife library or implement it
-#function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
-#function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
-#function _coef(reg::LD_Score_Regression, jknife, Nbar) end
-#function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
-#function _tot(reg::LD_Score_Regression, cat, cat_cov) end
-#function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
-#function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
-#function _intercept(reg::LD_Score_Regression, jknife) end
-#function _combine_twostep_jknives(
-#    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
-#) end
-#function _delete_vals_tot(reg::LD_Score_Regression) end
 
 
 function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
@@ -49,7 +30,7 @@ function aggregate(reg::LD_Score_Regression, y, x, N, M; intercept=nothing)
     num = M * (mean(y) - intercept)
     denom = mean(x .* N)
     return num / denom
-end
+end # function aggregate
 
 
 function ld_score_regression(
@@ -111,4 +92,19 @@ function ld_score_regression(
 
 
     return reg
-end # ld_score_regression
+end # function ld_score_regression
+
+
+# TODO need to find jackknife library or implement it
+#function _delete_vals_tot(reg::LD_Score_Regression, jknife, Nbar, M) end
+#function _delete_vals_part(reg::LD_Score_Regression, jknife, Nbar, M) end
+#function _coef(reg::LD_Score_Regression, jknife, Nbar) end
+#function _cat(reg::LD_Score_Regression, jknife, M, Nbar, coef, coef_cov) end
+#function _tot(reg::LD_Score_Regression, cat, cat_cov) end
+#function _prop(reg::LD_Score_Regression, jknife, M, Nbar, cat, tot) end
+#function _enrichment(reg::LD_Score_Regression, M, M_tot, cat, tot) end
+#function _intercept(reg::LD_Score_Regression, jknife) end
+#function _combine_twostep_jknives(
+#    reg::LD_Score_Regression, step1_jknife, step2_jknife, M_tot, c; Nbar=1,
+#) end
+#function _delete_vals_tot(reg::LD_Score_Regression) end

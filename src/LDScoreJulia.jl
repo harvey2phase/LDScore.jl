@@ -1,7 +1,10 @@
 module LDScoreJulia
     include("ldsc.jl")
+    include("LDScore/LD_Score_Regression.jl")
+    include("LDScore/Hsq.jl")
     include("LDScore/regression.jl")
     include("LDScore/sumstats.jl")
+    include("LDScore/parse.jl")
 
     export hsq_weights
     export aggregate

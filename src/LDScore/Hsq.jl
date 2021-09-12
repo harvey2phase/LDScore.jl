@@ -1,29 +1,15 @@
+"""
+Subtype of `LD_Score_Regression`.
+"""
+
+
 mutable struct Hsq <: LD_Score_Regression
-    y
-    x
-    w
-    N
-    M
-    n_blocks
-    intercept
-    slow
-    step1_ii
-    old_weights
+    y; x; w; N; M;
+    n_blocks; intercept; slow; step1_ii; old_weights;
     __null_intercept__
 
-    constrain_intercept
-    n_annot
-    intercept_se
-    twostep_filtered
+    constrain_intercept; n_annot; intercept_se; twostep_filtered;
 
-    """
-    Use these default values:
-        - n_blocks = 200
-        - intercept = nothing
-        - slow = false
-        - twostep = nothing
-        - old_weights = false
-    """
     function Hsq(
         y, x, w, N, M; n_blocks = 200, slow = false, old_weights = false,
         intercept = nothing, step1_ii = nothing,

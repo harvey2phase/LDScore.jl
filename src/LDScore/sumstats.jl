@@ -1,24 +1,13 @@
+"""
+Summary statistics.
+"""
+
+
 using CSV
 using DataFrames
 
-include("parse.jl")
 
-function test_print(name, value)
-    println("=================================================================")
-    println(name)
-    println(value)
-    println("-----------------------------------------------------------------")
-end # test_print
-
-
-# TODO
-function _read_M(args, n_annot) end
-function _check_variance(M_annot, ref_ld) end
-function _read_w_ld(args) end
-function _merge_and_log(ld, sumstats, noun) end
-
-
-function sumstats(fh; alleles=false, dropna=true)
+function sumstats(fh; alleles = false, dropna = true)
     # Parses .sumstats files. See docs/file_formats_sumstats.txt
     #dtype_dict = {"SNP": str,   "Z": float, "N": float, "A1": str, "A2": str}
     compression = get_compression(fh)
@@ -26,61 +15,16 @@ function sumstats(fh; alleles=false, dropna=true)
     if alleles usecols += ["A1", "A2"] end
 
     try
-        x = read_csv(fh, delim_whitespace=True, na_values=".")
+        x = read_csv(fh, delim_whitespace = True, na_values = ".")
     catch e
         println("Improperly formatted sumstats file:", str(e.args))
     end
 
     if dropna
-        x = x.dropna(how="any")
+        x = x.dropna(how = "any")
     end
 
     return x
-end
-
-
-function _read_sumstats(args, fh; alleles=false, dropna=false)
-    # Parser summary statistics
-    @info "Reading summary statistics from" fh
-    sumstats = parse_sumstats(fh, alleles=alleles, dropna=dropna)
-    @info "Read summary statistics for" size(sumstats) "SNPs."
-    m = size(sumstats)
-    sumstats = sumstats.drop_duplicates(subset="SNP")
-    if m > size(sumstats)
-        @info "Dropped SNPs with duplicated rs numbers:" m-size(sumstats)
-    end
-    return sumstats
-end
-
-
-function _read_ref_ld()
-    # Read reference LD Scores
-    ref_ld = _read_chr_split_files(
-        LDScoreJulia.args["ref-ld-chr"], LDScoreJulia.args["ref-ld"],
-        "reference panel LD Score", ldscore_fromlist,
-    )
-    @info "Num. of SNPs read for reference panel LD Scores:" size(ref_ld)
-    return ref_ld
-end
-
-
-function _load_testset_1()
-    df_ref_id = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["ref-ld"] * ".l2.ldscore"))
-    df_h2 = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["h²"]))
-
-    M_annot = reshape([[155881.2526]], (1, 1))
-    w_ld_cname = "CHR"
-    ref_ld_cnames = ["LD_0"]
-    sumstats = DataFrames.innerjoin(df_ref_id, df_h2, on = "SNP")
-    novar_cols = Dict([("LD_0", false)])
-    return (M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols)
-end
-
-
-#= TODO: Just loading testing set now,
-    need to actually implement to load generic datasets =#
-function _read_ld_sumstats(alleles=false, dropna=true)
-    return _load_testset_1()
 end
 
 
@@ -89,7 +33,6 @@ function estimate_h2()
     args = deepcopy(LDScoreJulia.args)
 
     # TODO: more checking
-
 
     M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols = _read_ld_sumstats()
 
@@ -146,3 +89,55 @@ function estimate_h2()
 
     return ĥ²
 end # function estimate_h2
+
+
+# TODO
+function _read_M(args, n_annot) end
+function _check_variance(M_annot, ref_ld) end
+function _read_w_ld(args) end
+function _merge_and_log(ld, sumstats, noun) end
+
+
+function _read_sumstats(args, fh; alleles=false, dropna=false)
+    # Parser summary statistics
+    @info "Reading summary statistics from" fh
+    sumstats = parse_sumstats(fh, alleles=alleles, dropna=dropna)
+    @info "Read summary statistics for" size(sumstats) "SNPs."
+    m = size(sumstats)
+    sumstats = sumstats.drop_duplicates(subset="SNP")
+    if m > size(sumstats)
+        @info "Dropped SNPs with duplicated rs numbers:" m-size(sumstats)
+    end
+    return sumstats
+end
+
+
+function _read_ref_ld()
+    # Read reference LD Scores
+    ref_ld = _read_chr_split_files(
+        LDScoreJulia.args["ref-ld-chr"], LDScoreJulia.args["ref-ld"],
+        "reference panel LD Score", ldscore_fromlist,
+    )
+    @info "Num. of SNPs read for reference panel LD Scores:" size(ref_ld)
+    return ref_ld
+end
+
+
+function _load_testset_1()
+    df_ref_id = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["ref-ld"] * ".l2.ldscore"))
+    df_h2 = DataFrames.DataFrame(CSV.File(LDScoreJulia.args["h²"]))
+
+    M_annot = reshape([[155881.2526]], (1, 1))
+    w_ld_cname = "CHR"
+    ref_ld_cnames = ["LD_0"]
+    sumstats = DataFrames.innerjoin(df_ref_id, df_h2, on = "SNP")
+    novar_cols = Dict([("LD_0", false)])
+    return (M_annot, w_ld_cname, ref_ld_cnames, sumstats, novar_cols)
+end
+
+
+#= TODO: Just loading testing set now,
+    need to actually implement to load generic datasets =#
+function _read_ld_sumstats(alleles = false, dropna = true)
+    return _load_testset_1()
+end

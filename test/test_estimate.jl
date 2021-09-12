@@ -16,14 +16,11 @@ function vector_approx(x, y, eps)
         return false
     end
     for (i, j) in enumerate(x)
-        if !approx(x[i], y[i], eps)
-            return false
-        end
+        if !approx(x[i], y[i], eps) return false end
     end
     return true
 end
 
-print(LDScoreJulia.args)
 LDScoreJulia.args["ref-ld"] = "test/test_ldscore/oneld_onefile"
 LDScoreJulia.args["w-ld"] = "test/test_ldscore/w"
 LDScoreJulia.args["h²"] = "test/test_sumstats/1"
