@@ -1,6 +1,6 @@
 # LDScore
 
-LDSC \[1\] implementation in Julia.
+LDSC regression \[1\] implementation in Julia.
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://harvey2phase.github.io/LDScore.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://harvey2phase.github.io/LDScore.jl/dev)
