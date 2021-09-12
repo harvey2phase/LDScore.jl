@@ -77,8 +77,8 @@ function _load_testset_1()
 end
 
 
-# TODO: Just loading testing set now, need to actually implement to load
-#       generic datasets
+#= TODO: Just loading testing set now,
+    need to actually implement to load generic datasets =#
 function _read_ld_sumstats(alleles=false, dropna=true)
     return _load_testset_1()
 end
@@ -119,22 +119,27 @@ function estimate_h2()
         n_snp = sum(ii) # TODO double check that this works
         ref_ld = [sumstats[ref_ld_cnames]]
         χ² = reshape(χ²[ii], (n_snp, 1))
-    end
+    end # if χ²_max != nothing
 
     ĥ² = Hsq(
         χ², ref_ld, s(sumstats[!, w_ld_cname]), s(sumstats[!, "N"]), M_annot,
-        n_blocks, LDScoreJulia.args["intercept-h²"], false, LDScoreJulia.args["two-step"], old_weights,
+        n_blocks = n_blocks, intercept = LDScoreJulia.args["intercept-h²"],
+        slow = false, step1_ii = LDScoreJulia.args["two-step"],
+        old_weights = old_weights,
     )
 
-    if LDScoreJulia.args["overlap_annot"]
+    if LDScoreJulia.args["overlap-annot"]
         overlap_matrix, M_tot = _read_annot(LDScoreJulia.args)
 
         df_results = ĥ²._overlap_output(
             ref_ld_cnames, overlap_matrix, M_annot, M_tot,
             LDScoreJulia.args["print_coefficients"],
         )
-        df_results.to_csv(LDScoreJulia.args["out"]+".results", sep="\t", index=False)
-    end
+        df_results.to_csv(
+            LDScoreJulia.args["out"] * ".results",
+            sep = "\t", index = false,
+        )
+    end # if LDScoreJulia.args["overlap-annot"]
 
     return ĥ²
-end # estimate_h2
+end # function estimate_h2

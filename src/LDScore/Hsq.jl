@@ -25,7 +25,8 @@ mutable struct Hsq <: LD_Score_Regression
         - old_weights = false
     """
     function Hsq(
-        y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
+        y, x, w, N, M; n_blocks = 200, slow = false, old_weights = false,
+        intercept = nothing, step1_ii = nothing,
     )
         hsq = new(
             y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights, 1,

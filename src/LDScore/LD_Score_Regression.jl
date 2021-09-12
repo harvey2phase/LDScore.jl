@@ -80,6 +80,7 @@ function ld_score_regression(
         intercept_se = "NA"
     end
 
+    #=
     reg.twostep_filtered = nothing
     if step1_ii != nothing && reg.constrain_intercept
         throw(ErrorException(
@@ -104,6 +105,7 @@ function ld_score_regression(
             (x) -> reshape(x[step1_ii], (n1, 1)), (yp, w, N, initial_w)
         )
     end
+    =#
 
     # TODO finish implementing this function
 

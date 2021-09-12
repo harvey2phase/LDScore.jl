@@ -25,6 +25,7 @@ function vector_approx(x, y, eps)
     return true
 end
 
+# Test to ensure that the basic structure of `Hsq` is intact
 @testset "Hsq struct" begin
     # column vectors d = 6 * 1
     y = [[0.2061] [0.2601] [4.3514] [6.1703] [5.0221] [2.418]]'
@@ -39,7 +40,8 @@ end
     old_weights = false
 
     hsq = LDScoreJulia.Hsq(
-        y, x, w, N, M, n_blocks, intercept, slow, step1_ii, old_weights,
+        y, x, w, N, M, n_blocks = n_blocks, intercept = intercept, slow = slow,
+        step1_ii = step1_ii, old_weights = old_weights,
     )
 
     hsq.old_weights == false
@@ -67,13 +69,9 @@ end
     w_ld = ones((4, 1))
     N = 9 .* ones((4, 1))
     M = [[7]]
-    n_blocks = 3
-    intercept = 1
-    slow = false
-    twostep = nothing
-    old_weights = false
     hsq = LDScoreJulia.Hsq(
-        χ², ld, w_ld, N, M, n_blocks, intercept, slow, twostep, old_weights,
+        χ², ld, w_ld, N, M, n_blocks = 3, intercept = 1,
+        slow = false, old_weights = false, step1_ii = nothing,
     )
 
     @testset "weights" begin
@@ -97,7 +95,7 @@ end
         M = 1e7
         agg = LDScoreJulia.aggregate(hsq, χ², ld, N, M)
         approx(agg, 0.5, eps)
-        agg = LDScoreJulia.aggregate(hsq, χ², ld, N, M; intercept=1.5)
+        agg = LDScoreJulia.aggregate(hsq, χ², ld, N, M; intercept = 1.5)
         approx(agg, 0, eps)
     end
 end
