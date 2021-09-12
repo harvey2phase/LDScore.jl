@@ -24,17 +24,6 @@ See `Hsq.jl` for a case study example.
 abstract type LDScoreRegression end
 
 
-function aggregate(reg::LDScoreRegression, y, x, N, M; intercept = nothing)
-    if intercept == nothing
-        intercept = reg.__null_intercept__
-    end
-
-    num = M * (mean(y) - intercept)
-    denom = mean(x .* N)
-    return num / denom
-end # function aggregate
-
-
 function ld_score_regression(
     reg::LDScoreRegression,
     y, x, w, N, M, n_blocks;
@@ -135,6 +124,17 @@ function ld_score_regression(
 
     return reg
 end # function ld_score_regression
+
+
+function aggregate(reg::LDScoreRegression, y, x, N, M; intercept = nothing)
+    if intercept == nothing
+        intercept = reg.__null_intercept__
+    end
+
+    num = M * (mean(y) - intercept)
+    denom = mean(x .* N)
+    return num / denom
+end # function aggregate
 
 
 # TODO need to find jackknife library or implement it
